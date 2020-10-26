@@ -14,13 +14,13 @@ namespace LandOfRails_Launcher.Helper
 {
     class Updater
     {
-        private static readonly string APILatestURL = "https://api.github.com/repos/Assistant/ModAssistant/releases/latest";
+        private static readonly string APILatestURL = "https://api.github.com/repos/MarkenJaden/LandOfRails-Launcher/releases/latest";
 
         private static Update LatestUpdate;
         private static Version CurrentVersion;
         private static Version LatestVersion;
         private static bool NeedsUpdate = false;
-        private static string NewExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "ModAssistant.exe");
+        private static string NewExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "LandOfRails-Launcher.exe");
 
         public static async Task<bool> CheckForUpdate()
         {
@@ -28,7 +28,7 @@ namespace LandOfRails_Launcher.Helper
             var body = await resp.Content.ReadAsStringAsync();
             LatestUpdate = JsonConvert.DeserializeObject<Update>(body);
 
-            LatestVersion = new Version(LatestUpdate.tag_name.Substring(1));
+            LatestVersion = new Version(LatestUpdate.tag_name);
             CurrentVersion = new Version(App.Version);
 
             return (LatestVersion > CurrentVersion);
@@ -36,14 +36,16 @@ namespace LandOfRails_Launcher.Helper
 
         public static async Task Run()
         {
-            if (Path.GetFileName(Utils.ExePath).Equals("ModAssistant.old.exe")) RunNew();
+            if (Path.GetFileName(Utils.ExePath).Equals("LandOfRails-Launcher.old.exe")) RunNew();
             try
             {
                 NeedsUpdate = await CheckForUpdate();
             }
-            catch
+            catch (Exception e)
             {
-                Utils.SendNotify((string)Application.Current.FindResource("Updater:CheckFailed"));
+                //Utils.SendNotify((string)Application.Current.FindResource("Updater:CheckFailed"));
+                Console.WriteLine("Update Check failed.");
+                Console.WriteLine(e);
             }
 
             if (NeedsUpdate) await StartUpdate();
@@ -51,12 +53,12 @@ namespace LandOfRails_Launcher.Helper
 
         public static async Task StartUpdate()
         {
-            string OldExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "ModAssistant.old.exe");
+            string OldExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "LandOfRails-Launcher.old.exe");
             string DownloadLink = null;
 
             foreach (Update.Asset asset in LatestUpdate.assets)
             {
-                if (asset.name == "ModAssistant.exe")
+                if (asset.name.Equals("LandOfRails-Launcher.exe"))
                 {
                     DownloadLink = asset.browser_download_url;
                 }
@@ -64,7 +66,8 @@ namespace LandOfRails_Launcher.Helper
 
             if (string.IsNullOrEmpty(DownloadLink))
             {
-                Utils.SendNotify((string)Application.Current.FindResource("Updater:DownloadFailed"));
+                //Utils.SendNotify((string)Application.Current.FindResource("Updater:DownloadFailed"));
+                Console.WriteLine("Download of new version failed.");
             }
             else
             {

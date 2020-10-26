@@ -43,6 +43,8 @@ namespace LandOfRails_Launcher
             startButton.DataContext = Static.login;
             startButton.Content = "Starten";
 
+            ModpackImage.Source = images[Static.Modpacks[0]];
+
             discord = new Helper.DiscordRPC();
         }
 
@@ -97,7 +99,7 @@ namespace LandOfRails_Launcher
         {
             foreach (Modpack modpack in modpackList.SelectedItems)
             {
-                ModpackImage.Source = new BitmapImage(new Uri(modpack.ImageUrl));
+                ModpackImage.Source = images[modpack];
                 currentSelectedModpack = modpack;
                 startButton.Content = Static.login.isDownloaded(modpack) ? "Starten" : "Herunterladen";
                 break;

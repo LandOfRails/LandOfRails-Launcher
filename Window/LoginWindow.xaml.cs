@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
-using AutoUpdaterDotNET;
 using LandOfRails_Launcher.Helper;
 using LandOfRails_Launcher.Properties;
 using Microsoft.VisualBasic.CompilerServices;
@@ -23,10 +23,9 @@ namespace LandOfRails_Launcher
         public LoginWindow()
         {
             //AutoUpdater.Start("https://launcher.landofrails.net/launcher/version.xml");
-            ApplicationInit();
             InitializeComponent();
             if (Static.login.autoLogin()) ShowMainWindow();
-            else if (Settings.Default.EMail != String.Empty && Settings.Default.Password != String.Empty)
+            else if (!Settings.Default.EMail.Equals("null") && !Settings.Default.Password.Equals("null"))
             {
                 if (Static.login.login(Settings.Default.EMail, Settings.Default.Password))
                 {
@@ -35,22 +34,6 @@ namespace LandOfRails_Launcher
                 else
                 {
                     Wrong.Opacity = 1;
-                }
-            }
-        }
-
-        private async void ApplicationInit()
-        {
-            //Update
-            if (Update)
-            {
-                try
-                {
-                    await Task.Run(async () => await Updater.Run());
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    Utils.StartAsAdmin(true);
                 }
             }
         }

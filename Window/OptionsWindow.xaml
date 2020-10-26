@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LandOfRails_Launcher.Window"
         mc:Ignorable="d"
-        Title="Options" Height="450" Width="800" WindowStyle="None" Icon="/LandOfRails Launcher;component/Resources/LOR 128 klein neu.png" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+        Title="Options" Height="450" Width="800" WindowStyle="None" Icon="../Resources/LOR 128 klein neu.png" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
     <Grid>
         <TabControl HorizontalAlignment="Left" Height="385" VerticalAlignment="Top" Width="792" BorderThickness="0">
             <TabItem Header="Spiel">

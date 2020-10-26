@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LandOfRails_Launcher"
         mc:Ignorable="d"
-        Title="LandOfRails Launcher" Height="600" Width="900" WindowStartupLocation="CenterScreen" Icon="/LandOfRails Launcher;component/Resources/LOR 128 klein neu.png" WindowStyle="ThreeDBorderWindow">
+        Title="LandOfRails Launcher" Height="600" Width="900" WindowStartupLocation="CenterScreen" Icon="../Resources/LOR 128 klein neu.png" WindowStyle="ThreeDBorderWindow">
     <Grid>
         <Rectangle Fill="#FF383838" Margin="271,0,0,0" Stroke="Black" Height="41" VerticalAlignment="Bottom" StrokeThickness="0"/>
         <Image Margin="271,0,0,41" Name="ModpackImage" Stretch="UniformToFill"/>

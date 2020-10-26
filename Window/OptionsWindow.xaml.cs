@@ -95,8 +95,8 @@ namespace LandOfRails_Launcher.Window
                     "Dies wird alle gespeicherten Login Daten löschen. Diesen Schritt kann man nicht rückgängig machen.",
                     "Bist du sicher?", MessageBoxButton.OKCancel);
             if (result != MessageBoxResult.OK) return;
-            Settings.Default.EMail = String.Empty;
-            Settings.Default.Password = String.Empty;
+            Settings.Default.EMail = "null";
+            Settings.Default.Password = "null";
             Settings.Default.Save();
         }
     }

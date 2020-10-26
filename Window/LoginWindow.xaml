@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LandOfRails_Launcher"
         mc:Ignorable="d"
-        Title="Login" Height="281" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/LandOfRails Launcher;component/Resources/LOR 128 klein neu.png" Background="#FF2E2E2E">
+        Title="Login" Height="281" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="../Resources/LOR 128 klein neu.png" Background="#FF2E2E2E">
     <Grid Background="#FF2E2E2E">
         <TextBox HorizontalAlignment="Left" Height="23" Margin="107,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="280" Name="EMailBox" BorderThickness="0"/>
         <PasswordBox HorizontalAlignment="Left" Height="23" Margin="107,189,0,0" VerticalAlignment="Top" Width="280" Name="PasswordBox" BorderThickness="0"/>
         <CheckBox Content="Merken" HorizontalAlignment="Left" Margin="107,217,0,0" VerticalAlignment="Top" Name="RembemberLoginCheckBox" Foreground="White" BorderThickness="0,1,0,0" BorderBrush="#00707070" Checked="RembemberLoginCheckBox_OnChecked" Unchecked="RembemberLoginCheckBox_OnUnchecked"/>
-        <Button Content="Login" HorizontalAlignment="Left" Margin="312,217,0,0" VerticalAlignment="Top" Width="75" Name="LoginButton" Click="LoginButton_OnClick" Background="#FFD0132D" Foreground="White" BorderThickness="0"/>
-        <Image HorizontalAlignment="Left" Height="80" Margin="107,10,0,0" VerticalAlignment="Top" Width="308" Source="/LandOfRails Launcher;component/Resources/LOR 10000 neu.png"/>
+        <Button Content="Login" HorizontalAlignment="Left" Margin="312,217,0,0" VerticalAlignment="Top" Width="75" Name="LoginButton" Click="LoginButton_OnClick" Background="#FFD0132D" Foreground="White" BorderThickness="0" IsDefault="True"/>
+        <Image HorizontalAlignment="Left" Height="80" Margin="107,10,0,0" VerticalAlignment="Top" Width="308" Source="../Resources/LOR 10000 neu.png"/>
         <Label Content="E-Mail" HorizontalAlignment="Left" Margin="107,121,0,0" VerticalAlignment="Top" Width="129" Height="23" Foreground="White"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="107,166,0,0" VerticalAlignment="Top" Width="129" Height="23" Foreground="White"/>
         <Label Content="Minecraft Login" HorizontalAlignment="Left" Margin="107,95,0,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="White"/>

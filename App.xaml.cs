@@ -17,5 +17,37 @@ namespace LandOfRails_Launcher
     public partial class App : Application
     {
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public static bool Update = true;
+        public static bool GUI = true;
+        public static LoginWindow window;
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            Init();
+        }
+        private async Task Init()
+        {
+            if (Update)
+            {
+                try
+                {
+                    await Task.Run(async () => await Updater.Run());
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Utils.StartAsAdmin(true);
+                }
+            }
+
+            if (GUI)
+            {
+                window = new LoginWindow();
+                window.Show();
+            }
+            else
+            {
+                Current.Shutdown();
+            }
+        }
     }
 }
