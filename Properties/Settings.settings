@@ -11,5 +11,11 @@
     <Setting Name="Password" Type="System.String" Scope="User">
       <Value Profile="(Default)">null</Value>
     </Setting>
+    <Setting Name="openConsole" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="keepOptionsFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

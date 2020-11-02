@@ -58,5 +58,29 @@ namespace LandOfRails_Launcher.Properties {
                 this["Password"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool openConsole {
+            get {
+                return ((bool)(this["openConsole"]));
+            }
+            set {
+                this["openConsole"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool keepOptionsFile {
+            get {
+                return ((bool)(this["keepOptionsFile"]));
+            }
+            set {
+                this["keepOptionsFile"] = value;
+            }
+        }
     }
 }

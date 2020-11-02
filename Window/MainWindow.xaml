@@ -49,12 +49,14 @@
                         </Grid.ContextMenu>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="75"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Grid.Row="0" Content="{Binding Title}" Foreground="White"/>
-                        <Label Grid.Column="1" Grid.Row="0" Content="{Binding CurrentVersion}" Foreground="White"/>
-                        <Label Grid.Column="2" Grid.Row="0" Content="{Binding ModpackVersion}" Foreground="LightGreen"/>
+                        <Image Grid.Column="0" Source="{Binding DownloadedImage}" Margin="5,0" MaxWidth="32" MaxHeight="32"/>
+                        <Label Grid.Column="1" Grid.Row="0" Content="{Binding Title}" Foreground="White"/>
+                        <Label Grid.Column="2" Grid.Row="0" Content="{Binding CurrentVersion}" Foreground="White"/>
+                        <Label Grid.Column="3" Grid.Row="0" Content="{Binding ModpackVersion}" Foreground="LightGreen"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

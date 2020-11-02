@@ -54,6 +54,9 @@ namespace LandOfRails_Launcher.MinecraftLaunch.Core
             mc.StartInfo.FileName = LaunchOption.JavaPath;
             mc.StartInfo.Arguments = arg;
             mc.StartInfo.WorkingDirectory = Minecraft.path;
+            mc.StartInfo.UseShellExecute = false;
+            mc.StartInfo.RedirectStandardOutput = true;
+            mc.StartInfo.RedirectStandardError = true;
 
             return mc;
         }

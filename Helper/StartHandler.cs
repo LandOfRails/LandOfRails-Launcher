@@ -2,14 +2,19 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Core;
 using Ionic.Zip;
 using LandOfRails_Launcher.MinecraftLaunch;
 using LandOfRails_Launcher.MinecraftLaunch.Core;
 using LandOfRails_Launcher.Models;
+using LandOfRails_Launcher.Properties;
+using LandOfRails_Launcher.Window;
 using Microsoft.VisualBasic.Devices;
 using Newtonsoft.Json;
+using MessageBox = System.Windows.MessageBox;
 
 namespace LandOfRails_Launcher.Helper
 {
@@ -24,6 +29,11 @@ namespace LandOfRails_Launcher.Helper
         private string compressedFileName; //the name of the file being extracted
         private long compressedSize; //the size of a single compressed file
         private long extractedSizeTotal; //the bytes total extracted
+
+        ProcessWindow processWindow;
+
+        private bool updateQuestionsFinished = true;
+        private bool update = false;
 
         private readonly BackgroundWorker extractFile;
         private readonly BackgroundWorker extractVersionFile;
@@ -102,15 +112,10 @@ namespace LandOfRails_Launcher.Helper
             }
 
             var process = launcher.CreateProcess(modpack.MinecraftVersion, forgeVersion, option);
-            process.Start();
+            processWindow.Start(process);
         }
 
-        public class Version
-        {
-            public string id { get; set; }
-        }
-
-        private void extractVersionFile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void extractVersionFile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) //Last step of update process
         {
             File.Delete(Path.Combine(path, modpack.Name, "modpack.zip"));
             string id;
@@ -127,6 +132,13 @@ namespace LandOfRails_Launcher.Helper
             using (StreamWriter sw = File.CreateText(Path.Combine(path, modpack.Name, "bin", "version.txt")))
             {
                 sw.WriteLine(id);
+            }
+
+            if (update)
+            {
+                foreach (var file in Directory.GetFiles(Path.Combine(path, "temp" + modpack.Name)))
+                    File.Copy(file, Path.Combine(path, modpack.Name), true);
+                Directory.Delete(Path.Combine(path, "temp" + modpack.Name), true);
             }
 
             progressIntermediate = false;
@@ -146,16 +158,14 @@ namespace LandOfRails_Launcher.Helper
             {
                 while (jsonReader.Read())
                 {
-                    if (jsonReader.TokenType == JsonToken.PropertyName
-                        && (string)jsonReader.Value == propertyName)
-                    {
-                        jsonReader.Read();
+                    if (jsonReader.TokenType != JsonToken.PropertyName ||
+                        (string) jsonReader.Value != propertyName) continue;
+                    jsonReader.Read();
 
-                        var serializer = new JsonSerializer();
-                        return serializer.Deserialize<T>(jsonReader);
-                    }
+                    var serializer = new JsonSerializer();
+                    return serializer.Deserialize<T>(jsonReader);
                 }
-                return default(T);
+                return default;
             }
         }
 
@@ -256,13 +266,18 @@ namespace LandOfRails_Launcher.Helper
         public bool start(Modpack modpack)
         {
             this.modpack = modpack;
-            if (!isDownloaded(modpack)) //Gibt es das Modpack?
+            if (!isDownloaded(modpack))
+            {
+                //Gibt es das Modpack?
+                update = false;
                 downloadModpack();
+            }
             else if (updateAvailable(modpack)) //Ist ein Update da?
                 switch (MessageBox.Show("Es ist ein Update verfügbar. Möchtest du es herunterladen?", "Update",
                     MessageBoxButton.YesNo, MessageBoxImage.Question))
                 {
                     case MessageBoxResult.Yes:
+                        update = true;
                         downloadModpack();
                         break;
                     case MessageBoxResult.No:
@@ -271,8 +286,12 @@ namespace LandOfRails_Launcher.Helper
                     default:
                         return false;
                 }
-            else 
+            else
+            {
+                processWindow = new ProcessWindow();
+                processWindow.Show();
                 StartSession();
+            }
 
             return true;
         }
@@ -294,8 +313,18 @@ namespace LandOfRails_Launcher.Helper
 
         public bool updateAvailable(Modpack modpack)
         {
-            var currentVersion = Convert.ToDouble(getCurrentVersion(modpack));
-            return Convert.ToDouble(modpack.ModpackVersion) > currentVersion;
+            try
+            {
+                Version currentVersion = new Version(getCurrentVersion(modpack));
+                Version modpackVersion = new Version(modpack.ModpackVersion);
+                return modpackVersion > currentVersion;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e + "\n" + getCurrentVersion(modpack));
+            }
+
+            return false;
         }
 
         public string getCurrentVersion(Modpack modpack)
@@ -313,9 +342,10 @@ namespace LandOfRails_Launcher.Helper
             startButtonEnabled = false;
             startButton = "Herunterladen...";
             Directory.CreateDirectory(Path.Combine(path, modpack.Name));
+            if(File.Exists(Path.Combine(path, modpack.Name, "version"))) File.Delete(Path.Combine(path, modpack.Name, "version"));
             using (var file = File.CreateText(Path.Combine(path, modpack.Name, "version")))
             {
-                file.Write(modpack.CurrentVersion);
+                file.Write(update ? modpack.ModpackVersion : modpack.CurrentVersion);
                 file.Flush();
                 file.Close();
             }
@@ -326,10 +356,31 @@ namespace LandOfRails_Launcher.Helper
                 webClient.DownloadFileAsync(new Uri(modpack.LocationOnServer),
                     Path.Combine(path, modpack.Name, "modpack.zip"));
             }
+
+            if (!update) return;
+            Directory.Delete(Path.Combine(path, modpack.Name, "mods"), true);
+            updateQuestionsFinished = false;
+
+            if (!Settings.Default.keepOptionsFile)
+            {
+                switch (MessageBox.Show("Möchtest du deine aktuellen Minecraft Ingame Einstellungen behalten? (Tastenbelegungen, Sound, etc.)", "options.txt", MessageBoxButton.YesNo, MessageBoxImage.Question))
+                {
+                    case MessageBoxResult.Yes:
+                        Directory.CreateDirectory(Path.Combine(path, "temp" + modpack.Name));
+                        if (File.Exists(Path.Combine(path, modpack.Name, "options.txt"))) File.Copy(Path.Combine(path, modpack.Name, "options.txt"), Path.Combine(path, "temp" + modpack.Name), true);
+                            break;
+                    case MessageBoxResult.No:
+                        break;
+                }
+            }
         }
 
-        private void unzipFile(object sender, AsyncCompletedEventArgs e) //Start unzip
+        private async void unzipFile(object sender, AsyncCompletedEventArgs e) //Start unzip
         {
+            while (!updateQuestionsFinished)
+            {
+                await Task.Delay(25);
+            }
             startButton = "Entpacken...";
             progressMaxValue = int.MaxValue;
             extractFile.RunWorkerAsync();

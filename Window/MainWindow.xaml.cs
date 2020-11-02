@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -35,8 +36,9 @@ namespace LandOfRails_Launcher
                 "LandOfRails Launcher");
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             InitializeComponent();
-            //update.checkForUpdates();
+#pragma warning disable 4014
             RefreshListAsync();
+#pragma warning restore 4014
             modpackList.ItemsSource = Static.Modpacks;
             progressBar.DataContext = Static.login;
             progressLabel.DataContext = Static.login;
@@ -50,6 +52,9 @@ namespace LandOfRails_Launcher
 
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
+#pragma warning disable 4014
+            RefreshListAsync();
+#pragma warning restore 4014
             foreach (Modpack modpack in modpackList.SelectedItems)
             {
                 Static.login.start(modpack);
@@ -78,6 +83,11 @@ namespace LandOfRails_Launcher
             Static.Modpacks = Static.Modpacks.OrderBy(t => t.Organisation).ToList();
             foreach (var modpack in Static.Modpacks)
             {
+                //Downloaded Icon stuff
+                if (!Static.login.isDownloaded(modpack))
+                    modpack.DownloadedImage = "https://image.flaticon.com/icons/png/512/0/532.png";
+
+                //Background Image stuff
                 images.Add(modpack, new BitmapImage(new Uri(modpack.ImageUrl)));
                 if (Static.login.isDownloaded(modpack))
                 {
@@ -116,33 +126,41 @@ namespace LandOfRails_Launcher
         {
             if (Static.login.isDownloaded(currentSelectedModpack))
             {
-                Process.Start(Path.Combine(path, currentSelectedModpack.Name));
-            }
+                if (Directory.Exists(Path.Combine(path, currentSelectedModpack.Name, "crash-reports")))
+                    Process.Start(Path.Combine(path, currentSelectedModpack.Name, "crash-reports"));
+                else MessageBox.Show("Du hast noch keine Crash-Logs :)");
+            } else MessageBox.Show("Dafür musst du zuerst das Modpack herunterladen ^^");
         }
 
         private void DeleteModpack_OnClick(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result =
-                MessageBox.Show(
-                    "Warnung! Es werden dabei alle Dateien, Einstellungen und Welten von dem Modpack " +
-                    currentSelectedModpack.Title + " gelöscht.",
-                    "Delete Confirmation", MessageBoxButton.YesNo);
-            if (result != MessageBoxResult.Yes) return;
-            Directory.Delete(Path.Combine(path, currentSelectedModpack.Name),true);
-            MessageBox.Show(currentSelectedModpack.Title + " wurde erfolgreich gelöscht.");
-            startButton.Content = "Herunterladen";
+            if (Static.login.isDownloaded(currentSelectedModpack))
+            {
+                MessageBoxResult result =
+                    MessageBox.Show(
+                        "Warnung! Es werden dabei alle Dateien, Einstellungen und Welten von dem Modpack " +
+                        currentSelectedModpack.Title + " gelöscht.",
+                        "Delete Confirmation", MessageBoxButton.YesNo);
+                if (result != MessageBoxResult.Yes) return;
+                Directory.Delete(Path.Combine(path, currentSelectedModpack.Name), true);
+                MessageBox.Show(currentSelectedModpack.Title + " wurde erfolgreich gelöscht.");
+                startButton.Content = "Herunterladen";
+            } else MessageBox.Show("Dafür musst du zuerst das Modpack herunterladen ^^");
         }
 
         private void ReinstallModpack_OnClick(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result =
-                MessageBox.Show(
-                    "Warnung! Es werden dabei alle Dateien, Einstellungen und Welten von dem Modpack " +
-                    currentSelectedModpack.Title + " gelöscht.",
-                    "Reinstall Confirmation", MessageBoxButton.YesNo);
-            if (result != MessageBoxResult.Yes) return;
-            Directory.Delete(Path.Combine(path, currentSelectedModpack.Name),true);
-            Static.login.start(currentSelectedModpack);
+            if (Static.login.isDownloaded(currentSelectedModpack))
+            {
+                MessageBoxResult result =
+                    MessageBox.Show(
+                        "Warnung! Es werden dabei alle Dateien, Einstellungen und Welten von dem Modpack " +
+                        currentSelectedModpack.Title + " gelöscht.",
+                        "Reinstall Confirmation", MessageBoxButton.YesNo);
+                if (result != MessageBoxResult.Yes) return;
+                Directory.Delete(Path.Combine(path, currentSelectedModpack.Name), true);
+                Static.login.start(currentSelectedModpack);
+            } else MessageBox.Show("Dafür musst du zuerst das Modpack herunterladen ^^");
         }
 
         private void OptionalMods_OnClick(object sender, RoutedEventArgs e)

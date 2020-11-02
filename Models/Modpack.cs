@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LandOfRails_Launcher.Models
 {
     class Modpack
     {
-        public Modpack(string name, string title, string modpackVersion, string minecraftVersion, int organisation, string key, string locationOnServer, string imageUrl)
+        public Modpack(string name, string title, string modpackVersion, string minecraftVersion, int organisation, string key, string locationOnServer, string imageUrl, string downloadedImage)
         {
-            this.Name = name;
-            this.Title = title;
-            this.MinecraftVersion = minecraftVersion;
-            this.ModpackVersion = modpackVersion;
-            this.Organisation = organisation;
-            this.Key = key;
-            this.LocationOnServer = locationOnServer;
-            this.ImageUrl = imageUrl;
+            Name = name;
+            Title = title;
+            MinecraftVersion = minecraftVersion;
+            ModpackVersion = modpackVersion;
+            Organisation = organisation;
+            Key = key;
+            LocationOnServer = locationOnServer;
+            ImageUrl = imageUrl;
+            DownloadedImage = downloadedImage;
+
         }
         public string Name { get; set; }
         public string Title { get; set; }
@@ -31,5 +28,6 @@ namespace LandOfRails_Launcher.Models
         public string Key { get; set; }
         public string LocationOnServer { get; set; }
         public string ImageUrl { get; set; }
+        public string DownloadedImage { get; set; }
     }
 }
