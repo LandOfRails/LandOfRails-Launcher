@@ -137,7 +137,7 @@ namespace LandOfRails_Launcher.Helper
             if (update)
             {
                 foreach (var file in Directory.GetFiles(Path.Combine(path, "temp" + modpack.Name)))
-                    File.Copy(file, Path.Combine(path, modpack.Name), true);
+                    File.Copy(file, Path.Combine(path, modpack.Name, "options.txt"), true); //SPÄTER WEGEN DATEINAME SCHAUEN!!!
                 Directory.Delete(Path.Combine(path, "temp" + modpack.Name), true);
             }
 
@@ -367,12 +367,14 @@ namespace LandOfRails_Launcher.Helper
                 {
                     case MessageBoxResult.Yes:
                         Directory.CreateDirectory(Path.Combine(path, "temp" + modpack.Name));
-                        if (File.Exists(Path.Combine(path, modpack.Name, "options.txt"))) File.Copy(Path.Combine(path, modpack.Name, "options.txt"), Path.Combine(path, "temp" + modpack.Name), true);
+                        if (File.Exists(Path.Combine(path, modpack.Name, "options.txt"))) File.Copy(Path.Combine(path, modpack.Name, "options.txt"), Path.Combine(path, "temp" + modpack.Name, "options.txt"),true);
                             break;
                     case MessageBoxResult.No:
                         break;
                 }
             }
+
+            updateQuestionsFinished = true;
         }
 
         private async void unzipFile(object sender, AsyncCompletedEventArgs e) //Start unzip
