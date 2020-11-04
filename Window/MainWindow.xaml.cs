@@ -30,6 +30,9 @@ namespace LandOfRails_Launcher
         private Modpack currentSelectedModpack;
         private Dictionary<Modpack, BitmapImage> images = new Dictionary<Modpack, BitmapImage>();
         Helper.DiscordRPC discord;
+
+        private int lastSelected = 999;
+
         public MainWindow()
         {
             path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -60,6 +63,9 @@ namespace LandOfRails_Launcher
                 Static.login.start(modpack);
                 break;
             }
+#pragma warning disable 4014
+            RefreshListAsync();
+#pragma warning restore 4014
         }
 
         private void refreshButton_Click(object sender, RoutedEventArgs e)
@@ -67,7 +73,6 @@ namespace LandOfRails_Launcher
 #pragma warning disable 4014
             RefreshListAsync();
 #pragma warning restore 4014
-            modpackList.ItemsSource = Static.Modpacks;
             discord.SetIdle();
             //Check for Launcher updates
         }
@@ -103,6 +108,11 @@ namespace LandOfRails_Launcher
                     modpack.ModpackVersion = String.Empty;
                 }
             }
+            modpackList.ItemsSource = Static.Modpacks;
+            if (lastSelected != 999)
+            {
+                modpackList.SelectedIndex = lastSelected;
+            }
         }
 
         private void ModpackList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -112,6 +122,7 @@ namespace LandOfRails_Launcher
                 ModpackImage.Source = images[modpack];
                 currentSelectedModpack = modpack;
                 startButton.Content = Static.login.isDownloaded(modpack) ? "Starten" : "Herunterladen";
+                lastSelected = modpackList.SelectedIndex;
                 break;
             }
         }
@@ -120,6 +131,9 @@ namespace LandOfRails_Launcher
             if (Static.login.isDownloaded(currentSelectedModpack))
                 Process.Start(Path.Combine(path, currentSelectedModpack.Name));
             else MessageBox.Show("Dafür musst du zuerst das Modpack herunterladen ^^");
+#pragma warning disable 4014
+            RefreshListAsync();
+#pragma warning restore 4014
         }
 
         private void OpenCrashLogs_OnClick(object sender, RoutedEventArgs e)
@@ -130,6 +144,9 @@ namespace LandOfRails_Launcher
                     Process.Start(Path.Combine(path, currentSelectedModpack.Name, "crash-reports"));
                 else MessageBox.Show("Du hast noch keine Crash-Logs :)");
             } else MessageBox.Show("Dafür musst du zuerst das Modpack herunterladen ^^");
+#pragma warning disable 4014
+            RefreshListAsync();
+#pragma warning restore 4014
         }
 
         private void DeleteModpack_OnClick(object sender, RoutedEventArgs e)
@@ -146,6 +163,9 @@ namespace LandOfRails_Launcher
                 MessageBox.Show(currentSelectedModpack.Title + " wurde erfolgreich gelöscht.");
                 startButton.Content = "Herunterladen";
             } else MessageBox.Show("Dafür musst du zuerst das Modpack herunterladen ^^");
+#pragma warning disable 4014
+            RefreshListAsync();
+#pragma warning restore 4014
         }
 
         private void ReinstallModpack_OnClick(object sender, RoutedEventArgs e)
@@ -161,12 +181,18 @@ namespace LandOfRails_Launcher
                 Directory.Delete(Path.Combine(path, currentSelectedModpack.Name), true);
                 Static.login.start(currentSelectedModpack);
             } else MessageBox.Show("Dafür musst du zuerst das Modpack herunterladen ^^");
+#pragma warning disable 4014
+            RefreshListAsync();
+#pragma warning restore 4014
         }
 
         private void OptionalMods_OnClick(object sender, RoutedEventArgs e)
         {
             //Open Window to edit optional mods
             MessageBox.Show("Noch nicht implementiert.");
+#pragma warning disable 4014
+            RefreshListAsync();
+#pragma warning restore 4014
         }
 
         private void OptionsButton_OnClick(object sender, RoutedEventArgs e)
@@ -175,6 +201,9 @@ namespace LandOfRails_Launcher
             options.Owner = this;
             options.ShowInTaskbar = false;
             options.Show();
+#pragma warning disable 4014
+            RefreshListAsync();
+#pragma warning restore 4014
         }
     }
 }

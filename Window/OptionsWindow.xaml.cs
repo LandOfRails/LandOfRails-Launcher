@@ -32,6 +32,7 @@ namespace LandOfRails_Launcher.Window
             Settings.Default.Upgrade();
             ramSlider.Maximum = new ComputerInfo().TotalPhysicalMemory / 1e+6 - 2000;
             ramSlider.Value = Properties.Settings.Default.RAM;
+            consoleCheckBox.IsChecked = Settings.Default.openConsole;
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -98,6 +99,16 @@ namespace LandOfRails_Launcher.Window
             Settings.Default.EMail = "null";
             Settings.Default.Password = "null";
             Settings.Default.Save();
+        }
+
+        private void ConsoleCheckBox_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.openConsole = true;
+        }
+
+        private void ConsoleCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.openConsole = false;
         }
     }
 }

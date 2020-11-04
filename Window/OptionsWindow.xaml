@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LandOfRails_Launcher.Window"
         mc:Ignorable="d"
-        Title="Options" Height="450" Width="800" WindowStyle="None" Icon="../Resources/LOR 128 klein neu.png" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+        Title="Options" Height="162.141" Width="379.373" WindowStyle="None" Icon="../Resources/LOR 128 klein neu.png" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
     <Grid>
-        <TabControl HorizontalAlignment="Left" Height="385" VerticalAlignment="Top" Width="792" BorderThickness="0">
+        <TabControl BorderThickness="0">
             <TabItem Header="Spiel">
                 <Grid Background="#FFE5E5E5">
                     <Label Content="Arbeitsspeicher (RAM)" HorizontalAlignment="Left" Margin="74,10,0,0" VerticalAlignment="Top" Height="39" Width="227" FontWeight="Bold" FontSize="20"/>
@@ -19,8 +19,10 @@
             </TabItem>
             <TabItem Header="Launcher">
                 <Grid Background="#FFE5E5E5">
-                    <Label Content="Remember credentials" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="40" Width="248" FontWeight="Bold" FontSize="22"/>
-                    <Button Content="Delete saved credentials" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Width="248" Name="deleteCredentials" Click="DeleteCredentials_OnClick"/>
+                    <Label Content="Remember credentials" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="40" Width="145" FontWeight="Bold"/>
+                    <Button Content="Delete saved credentials" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Width="145" Name="deleteCredentials" Click="DeleteCredentials_OnClick"/>
+                    <Label Content="Open console" HorizontalAlignment="Left" Margin="160,10,0,0" VerticalAlignment="Top" Height="40" Width="145" FontWeight="Bold"/>
+                    <CheckBox Content="Open console" HorizontalAlignment="Left" Margin="164,55,0,0" VerticalAlignment="Top" Height="20" Name="consoleCheckBox" Checked="ConsoleCheckBox_OnChecked" Unchecked="ConsoleCheckBox_OnUnchecked"/>
 
                 </Grid>
             </TabItem>

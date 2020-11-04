@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,7 +21,7 @@ namespace LandOfRails_Launcher.Helper
         private static Version CurrentVersion;
         private static Version LatestVersion;
         private static bool NeedsUpdate = false;
-        private static string NewExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "LandOfRails-Launcher.exe");
+        private static readonly string NewExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath) ?? string.Empty, "LandOfRails-Launcher.exe");
 
         public static async Task<bool> CheckForUpdate()
         {
@@ -86,7 +87,29 @@ namespace LandOfRails_Launcher.Helper
         private static void RunNew()
         {
             Process.Start(NewExe);
-            Application.Current.Dispatcher.Invoke(() => { Application.Current.Shutdown(); });
+            Application.Current.Dispatcher.Invoke(() => {
+                //string batchCommands = string.Empty;
+                //string exeFileName = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\").Replace(".exe", ".old.exe");
+
+                //batchCommands += "@ECHO OFF\n";                         // Do not show any output
+                //batchCommands += "ping 127.0.0.1 > nul\n";              // Wait approximately 4 seconds (so that the process is already terminated)
+                //batchCommands += "echo j | del /F ";                    // Delete the executeable
+                //batchCommands += exeFileName + "\n";
+                //batchCommands += "echo j | del deleteMyProgram.bat";    // Delete this bat file
+
+                //File.WriteAllText("deleteMyProgram.bat", batchCommands);
+
+                //Process.Start("deleteMyProgram.bat");
+
+                Process.Start(new ProcessStartInfo()
+                {
+                    Arguments = "/C choice /C Y /N /D Y /T 3 & Del \"" + Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\").Replace(".exe", ".old.exe") + "\"",
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    FileName = "cmd.exe"
+                });
+
+                Application.Current.Shutdown(); });
         }
     }
 

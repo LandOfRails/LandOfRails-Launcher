@@ -41,6 +41,11 @@ namespace LandOfRails_Launcher.Window
         }
         private void KillButton_OnClick(object sender, RoutedEventArgs e)
         {
+            if (minecraftProcess == null)
+            {
+                Close();
+                return;
+            }
             if(!minecraftProcess.HasExited)
                 minecraftProcess.Kill();
         }

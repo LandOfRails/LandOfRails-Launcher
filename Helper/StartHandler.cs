@@ -35,6 +35,8 @@ namespace LandOfRails_Launcher.Helper
         private bool updateQuestionsFinished = true;
         private bool update = false;
 
+        private bool cancel = false;
+
         private readonly BackgroundWorker extractFile;
         private readonly BackgroundWorker extractVersionFile;
         private readonly BackgroundWorker downloadMinecraftStuff;
@@ -79,6 +81,7 @@ namespace LandOfRails_Launcher.Helper
 
         private void downloadMinecraftStuff_DoWork(object sender, DoWorkEventArgs e)
         {
+            if (cancel) return;
             startButtonEnabled = false;
             var minecraft = new Minecraft(Path.Combine(path, modpack.Name));
             minecraft.SetAssetsPath(path);
@@ -112,43 +115,56 @@ namespace LandOfRails_Launcher.Helper
             }
 
             var process = launcher.CreateProcess(modpack.MinecraftVersion, forgeVersion, option);
-            processWindow.Start(process);
+            if (Settings.Default.openConsole) processWindow.Start(process);
+            else process.Start();
         }
 
-        private void extractVersionFile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) //Last step of update process
+        private void
+            extractVersionFile_RunWorkerCompleted(object sender,
+                RunWorkerCompletedEventArgs e) //Last step of update process
         {
-            File.Delete(Path.Combine(path, modpack.Name, "modpack.zip"));
-            string id;
-            using (StreamReader r = new StreamReader(Path.Combine(path, modpack.Name, "bin", "version.json")))
+            if (cancel) return;
+            try
             {
-                string json = r.ReadToEnd();
-                id = GetFirstInstance<string>("id", json);
+                File.Delete(Path.Combine(path, modpack.Name, "modpack.zip"));
+                string id;
+                using (StreamReader r = new StreamReader(Path.Combine(path, modpack.Name, "bin", "version.json")))
+                {
+                    string json = r.ReadToEnd();
+                    id = GetFirstInstance<string>("id", json);
+                }
+
+                id = id.ToLower();
+                id = id.Replace(modpack.MinecraftVersion + "-forge", "");
+                id = id.Replace(modpack.MinecraftVersion + "-", "");
+
+                using (StreamWriter sw = File.CreateText(Path.Combine(path, modpack.Name, "bin", "version.txt")))
+                {
+                    sw.WriteLine(id);
+                }
+
+                if (update)
+                {
+                    foreach (var file in Directory.GetFiles(Path.Combine(path, "temp" + modpack.Name)))
+                        File.Copy(file, Path.Combine(path, modpack.Name, "options.txt"),
+                            true); //SPÄTER WEGEN DATEINAME SCHAUEN!!!
+                    Directory.Delete(Path.Combine(path, "temp" + modpack.Name), true);
+                }
+
+                progressIntermediate = false;
+                progressValue = 0;
+                progressLabel = modpack.Title + " ist startklar! =)";
+                startButtonEnabled = true;
+                progressValue = 100;
+                progressMaxValue = 100;
+                startButton = "Starten";
+                MessageBox.Show("Modpack heruntergeladen!");
             }
-
-            id = id.ToLower();
-            id = id.Replace(modpack.MinecraftVersion+"-forge","");
-            id = id.Replace(modpack.MinecraftVersion+"-", "");
-
-            using (StreamWriter sw = File.CreateText(Path.Combine(path, modpack.Name, "bin", "version.txt")))
+            catch (Exception)
             {
-                sw.WriteLine(id);
+                cancel = true;
+                MessageBox.Show("Scheinbar existiert die Datei nicht. Bitte informiere ein Teammitglied über das Problem, damit es schnellstmöglich behoben werden kann.", "Fehlende Date", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-
-            if (update)
-            {
-                foreach (var file in Directory.GetFiles(Path.Combine(path, "temp" + modpack.Name)))
-                    File.Copy(file, Path.Combine(path, modpack.Name, "options.txt"), true); //SPÄTER WEGEN DATEINAME SCHAUEN!!!
-                Directory.Delete(Path.Combine(path, "temp" + modpack.Name), true);
-            }
-
-            progressIntermediate = false;
-            progressValue = 0;
-            progressLabel = modpack.Title + " ist startklar! =)";
-            startButtonEnabled = true;
-            progressValue = 100;
-            progressMaxValue = 100;
-            startButton = "Starten";
-            MessageBox.Show("Modpack heruntergeladen!");
         }
 
         public T GetFirstInstance<T>(string propertyName, string json)
@@ -171,6 +187,7 @@ namespace LandOfRails_Launcher.Helper
 
         private void extractVersionFile_DoWork(object sender, DoWorkEventArgs e)
         {
+            if (cancel) return;
             try
             {
                 var fileName = Path.Combine(path, modpack.Name, "bin", "modpack.jar");
@@ -205,7 +222,8 @@ namespace LandOfRails_Launcher.Helper
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                cancel = true;
+                MessageBox.Show("Scheinbar stimmt der Link der hier hinterlegt ist noch nicht :/ Bitte informiere ein Teammitglied über das Problem, damit es schneller behoben wird.", "Falscher Link", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -339,6 +357,7 @@ namespace LandOfRails_Launcher.Helper
 
         private void downloadModpack()
         {
+            if (cancel) return;
             startButtonEnabled = false;
             startButton = "Herunterladen...";
             Directory.CreateDirectory(Path.Combine(path, modpack.Name));
@@ -418,6 +437,7 @@ namespace LandOfRails_Launcher.Helper
 
         private void ExtractFile_DoWork(object sender, DoWorkEventArgs e)
         {
+            if (cancel) return;
             try
             {
                 var fileName = Path.Combine(path, modpack.Name, "modpack.zip");
@@ -447,7 +467,8 @@ namespace LandOfRails_Launcher.Helper
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                cancel = true;
+                MessageBox.Show("Scheinbar ist ein Fehler beim entpacken aufgetreten. Bitte informiere ein Teammitglied über das Problem, damit es schnellstmöglich behoben wird.", "Fehler beim entpacken", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
