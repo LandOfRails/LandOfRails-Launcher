@@ -29,7 +29,7 @@ namespace LandOfRails_Launcher.Helper
             var body = await resp.Content.ReadAsStringAsync();
             LatestUpdate = JsonConvert.DeserializeObject<Update>(body);
 
-            LatestVersion = new Version(LatestUpdate.tag_name);
+            LatestVersion = new Version(LatestUpdate.tag_name.Substring(1));
             CurrentVersion = new Version(App.Version);
 
             return (LatestVersion > CurrentVersion);
