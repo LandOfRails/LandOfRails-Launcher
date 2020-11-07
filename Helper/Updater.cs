@@ -101,13 +101,13 @@ namespace LandOfRails_Launcher.Helper
 
                 //Process.Start("deleteMyProgram.bat");
 
-                Process.Start(new ProcessStartInfo()
-                {
-                    Arguments = "/C choice /C Y /N /D Y /T 3 & Del \"" + Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\").Replace(".exe", ".old.exe") + "\"",
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    FileName = "cmd.exe"
-                });
+                //Process.Start(new ProcessStartInfo()
+                //{
+                //    Arguments = "/C choice /C Y /N /D Y /T 3 & Del \"" + Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\").Replace(".exe", ".old.exe") + "\"",
+                //    WindowStyle = ProcessWindowStyle.Hidden,
+                //    CreateNoWindow = true,
+                //    FileName = "cmd.exe"
+                //});
 
                 Application.Current.Shutdown(); });
         }
