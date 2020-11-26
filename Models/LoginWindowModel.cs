@@ -5,9 +5,9 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using LandOfRails_Launcher.Helper;
+using LandOfRailsLauncher.Helper;
 
-namespace LandOfRails_Launcher.Models
+namespace LandOfRailsLauncher.Models
 {
     class LoginWindowModel : BaseViewModel
     {

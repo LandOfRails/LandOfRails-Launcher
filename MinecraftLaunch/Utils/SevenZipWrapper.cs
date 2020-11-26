@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Utils
+namespace LandOfRailsLauncher.MinecraftLaunch.Utils
 {
     class SevenZipWrapper
     {

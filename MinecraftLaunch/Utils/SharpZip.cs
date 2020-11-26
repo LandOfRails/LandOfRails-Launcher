@@ -2,7 +2,7 @@
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Utils
+namespace LandOfRailsLauncher.MinecraftLaunch.Utils
 {
     public class SharpZip
     {

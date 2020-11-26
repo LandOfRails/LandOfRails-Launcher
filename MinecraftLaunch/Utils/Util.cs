@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Utils
+namespace LandOfRailsLauncher.MinecraftLaunch.Utils
 {
     public class IOUtil
     {

@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using LandOfRails_Launcher.MinecraftLaunch.Utils;
+using LandOfRailsLauncher.MinecraftLaunch.Utils;
 using Newtonsoft.Json.Linq;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Core
+namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public class MJava
     {

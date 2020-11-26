@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Core
+namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public enum MLoginResult { Success, BadRequest, WrongAccount, NeedLogin, UnknownError }
 
@@ -291,7 +291,7 @@ namespace LandOfRails_Launcher.MinecraftLaunch.Core
                         return errorHandle(response);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 result.Result = MLoginResult.UnknownError;
             }
@@ -329,8 +329,8 @@ namespace LandOfRails_Launcher.MinecraftLaunch.Core
             }
             catch (Exception ex)
             {
-                throw ex;
                 result.Result = MLoginResult.UnknownError;
+                throw ex;
             }
 
             return result;

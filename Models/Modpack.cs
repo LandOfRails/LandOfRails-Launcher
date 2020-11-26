@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LandOfRails_Launcher.Models
+namespace LandOfRailsLauncher.Models
 {
     class Modpack
     {

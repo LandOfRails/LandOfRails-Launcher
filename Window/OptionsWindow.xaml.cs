@@ -13,12 +13,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using LandOfRails_Launcher.Models;
-using LandOfRails_Launcher.Properties;
+using LandOfRailsLauncher.Models;
+using LandOfRailsLauncher.Properties;
 using Microsoft.VisualBasic.Devices;
 using Path = System.IO.Path;
 
-namespace LandOfRails_Launcher.Window
+namespace LandOfRailsLauncher.Window
 {
     /// <summary>
     /// Interaktionslogik für OptionsWindow.xaml

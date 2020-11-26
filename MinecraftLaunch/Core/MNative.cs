@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using LandOfRails_Launcher.MinecraftLaunch.Utils;
+using LandOfRailsLauncher.MinecraftLaunch.Utils;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Core
+namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public class MNative
     {

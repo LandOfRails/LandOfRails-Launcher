@@ -11,7 +11,7 @@ using System.Windows;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 
-namespace LandOfRails_Launcher.Helper
+namespace LandOfRailsLauncher.Helper
 {
     class Updater
     {

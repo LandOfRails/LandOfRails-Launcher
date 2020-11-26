@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Newtonsoft.Json.Linq;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Core
+namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public class MRule
     {
@@ -27,6 +27,7 @@ namespace LandOfRails_Launcher.MinecraftLaunch.Core
                 return "windows";
             else
                 return "linux";
+/*
             var osType = Environment.OSVersion.Platform;
 
             if (osType == PlatformID.MacOSX)
@@ -35,6 +36,7 @@ namespace LandOfRails_Launcher.MinecraftLaunch.Core
                 return "linux";
             else
                 return "windows";
+*/
         }
 
         public bool CheckOSRequire(JArray arr)

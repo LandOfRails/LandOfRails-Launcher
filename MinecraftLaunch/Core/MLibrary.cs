@@ -2,7 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Core
+namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public class MLibrary
     {

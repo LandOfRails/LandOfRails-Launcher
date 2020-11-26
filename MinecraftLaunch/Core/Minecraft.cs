@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Core
+namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public class Minecraft
     {

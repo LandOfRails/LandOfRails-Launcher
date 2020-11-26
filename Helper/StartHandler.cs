@@ -7,16 +7,16 @@ using System.Windows;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Core;
 using Ionic.Zip;
-using LandOfRails_Launcher.MinecraftLaunch;
-using LandOfRails_Launcher.MinecraftLaunch.Core;
-using LandOfRails_Launcher.Models;
-using LandOfRails_Launcher.Properties;
-using LandOfRails_Launcher.Window;
+using LandOfRailsLauncher.MinecraftLaunch;
+using LandOfRailsLauncher.MinecraftLaunch.Core;
+using LandOfRailsLauncher.Models;
+using LandOfRailsLauncher.Properties;
+using LandOfRailsLauncher.Window;
 using Microsoft.VisualBasic.Devices;
 using Newtonsoft.Json;
 using MessageBox = System.Windows.MessageBox;
 
-namespace LandOfRails_Launcher.Helper
+namespace LandOfRailsLauncher.Helper
 {
     internal class StartHandler : BaseViewModel
     {
@@ -220,7 +220,7 @@ namespace LandOfRails_Launcher.Helper
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 cancel = true;
                 MessageBox.Show("Scheinbar stimmt der Link der hier hinterlegt ist noch nicht :/ Bitte informiere ein Teammitglied über das Problem, damit es schneller behoben wird.", "Falscher Link", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -465,7 +465,7 @@ namespace LandOfRails_Launcher.Helper
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 cancel = true;
                 MessageBox.Show("Scheinbar ist ein Fehler beim entpacken aufgetreten. Bitte informiere ein Teammitglied über das Problem, damit es schnellstmöglich behoben wird.", "Fehler beim entpacken", MessageBoxButton.OK, MessageBoxImage.Warning);

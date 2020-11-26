@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace LandOfRails_Launcher.Window
+namespace LandOfRailsLauncher.Window
 {
     /// <summary>
     /// Interaktionslogik für ProcessWindow.xaml

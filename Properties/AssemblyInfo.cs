@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("LandOfRails-Launcher")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("LandOfRails")]
 [assembly: AssemblyProduct("LandOfRails-Launcher")]
 [assembly: AssemblyCopyright("Copyright © MarkenJaden 2020")]
 [assembly: AssemblyTrademark("")]
@@ -51,5 +51,5 @@ using System.Windows;
 // Sie können alle Werte angeben oder Standardwerte für die Build- und Revisionsnummern verwenden,
 // indem Sie "*" wie unten gezeigt eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.7.1")]
-[assembly: AssemblyFileVersion("0.1.7.1")]
+[assembly: AssemblyVersion("0.1.7.4")]
+[assembly: AssemblyFileVersion("0.1.7.4")]

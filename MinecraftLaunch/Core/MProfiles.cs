@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json.Linq;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Core
+namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public class MProfile
     {

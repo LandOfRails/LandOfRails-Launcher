@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LandOfRails_Launcher.Page
+namespace LandOfRailsLauncher.Page
 {
     /// <summary>
     /// Interaktionslogik für MainPage.xaml

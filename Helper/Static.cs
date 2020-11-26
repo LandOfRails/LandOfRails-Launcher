@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LandOfRails_Launcher.Models;
+using LandOfRailsLauncher.Models;
 
-namespace LandOfRails_Launcher.Helper
+namespace LandOfRailsLauncher.Helper
 {
     class Static
     {

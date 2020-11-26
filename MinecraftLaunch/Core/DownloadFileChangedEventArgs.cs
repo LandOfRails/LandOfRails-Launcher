@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LandOfRails_Launcher.MinecraftLaunch.Core
+namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public enum MFile { Runtime, Library, Resource, Minecraft };
 

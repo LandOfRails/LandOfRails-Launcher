@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace LandOfRails_Launcher.Helper
+namespace LandOfRailsLauncher.Helper
 {
     public class CommandHandler : ICommand
     {

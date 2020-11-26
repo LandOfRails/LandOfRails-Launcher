@@ -5,9 +5,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using LandOfRails_Launcher.Annotations;
+using LandOfRailsLauncher.Annotations;
 
-namespace LandOfRails_Launcher.Models
+namespace LandOfRailsLauncher.Models
 {
     class BaseViewModel : INotifyPropertyChanged
     {

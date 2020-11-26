@@ -4,22 +4,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using LandOfRails_Launcher.Helper;
-using LandOfRails_Launcher.Models;
-using LandOfRails_Launcher.Window;
+using LandOfRailsLauncher.Helper;
+using LandOfRailsLauncher.Models;
+using LandOfRailsLauncher.Window;
 using Newtonsoft.Json;
-using DiscordRPC = LandOfRails_Launcher.Helper.DiscordRPC;
 using Path = System.IO.Path;
 
-namespace LandOfRails_Launcher
+namespace LandOfRailsLauncher
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml

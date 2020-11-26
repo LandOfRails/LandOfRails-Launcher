@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LandOfRails_Launcher.Helper
+namespace LandOfRailsLauncher.Helper
 {
     class Http
     {

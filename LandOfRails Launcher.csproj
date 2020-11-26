@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6D9C23CC-8C34-4F8C-942F-4544B6088993}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>LandOfRails_Launcher</RootNamespace>
+    <RootNamespace>LandOfRailsLauncher</RootNamespace>
     <AssemblyName>LandOfRails-Launcher</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -19,7 +19,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
+    <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
@@ -28,7 +28,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://launcher.landofrails.net/</InstallUrl>
+    <InstallUrl>https://launcher.landofrails.net/launcher/</InstallUrl>
     <UpdateUrl>https://launcher.landofrails.net/launcher/</UpdateUrl>
     <SupportUrl>https://www.landofrails.net/kontakt.html</SupportUrl>
     <ErrorReportUrl>https://www.landofrails.net/kontakt.html</ErrorReportUrl>
@@ -38,9 +38,10 @@
     <MinimumRequiredVersion>0.1.0.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.html</WebPage>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>0.1.1.%2a</ApplicationVersion>
+    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationVersion>0.1.7.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -67,22 +68,22 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>LandOfRails_Launcher.App</StartupObject>
+    <StartupObject>LandOfRailsLauncher.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>LOR 512 klein neu.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>F8A4D279E0F22FDF8611B20AD48B5C1ADFB2DB96</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>B24D84C5E94E4D27C804CF149AA901783566E53F</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>LandOfRails Launcher_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>LandOfRails Launcher_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetZone>LocalIntranet</TargetZone>
+    <TargetZone>Internet</TargetZone>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -95,8 +96,14 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>LandOfRails-Launcher-Key.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>LandOfRails Launcher_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
@@ -231,8 +238,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="LandOfRails Launcher_1_TemporaryKey.pfx" />
     <None Include="LandOfRails Launcher_TemporaryKey.pfx" />
     <None Include="LandOfRails-Launcher-Key.pfx" />
+    <None Include="LOR Launcher Key 5.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">

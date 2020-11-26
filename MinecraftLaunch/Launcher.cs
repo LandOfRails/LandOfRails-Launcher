@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using LandOfRails_Launcher.MinecraftLaunch.Core;
+using LandOfRailsLauncher.MinecraftLaunch.Core;
 
-namespace LandOfRails_Launcher.MinecraftLaunch
+namespace LandOfRailsLauncher.MinecraftLaunch
 {
     public class Launcher
     {

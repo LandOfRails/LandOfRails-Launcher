@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using LandOfRails_Launcher.Helper;
+using LandOfRailsLauncher.Helper;
 
-namespace LandOfRails_Launcher
+namespace LandOfRailsLauncher
 {
     /// <summary>
     /// Interaktionslogik für "App.xaml"
@@ -17,15 +17,17 @@ namespace LandOfRails_Launcher
     public partial class App : Application
     {
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        public static bool Update = true;
+        public static bool Update = false;
         public static bool GUI = true;
         public static LoginWindow window;
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+#pragma warning disable 4014
             Init();
+#pragma warning restore 4014
         }
-        private async Task Init()
+        private static async Task Init()
         {
             if (Update)
             {

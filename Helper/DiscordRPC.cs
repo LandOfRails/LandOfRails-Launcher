@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DiscordRPC;
 using DiscordRPC.Logging;
 
-namespace LandOfRails_Launcher.Helper
+namespace LandOfRailsLauncher.Helper
 {
     class DiscordRPC
     {

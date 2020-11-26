@@ -4,12 +4,12 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
-using LandOfRails_Launcher.Helper;
-using LandOfRails_Launcher.Properties;
+using LandOfRailsLauncher.Helper;
+using LandOfRailsLauncher.Properties;
 using Microsoft.VisualBasic.CompilerServices;
-using Utils = LandOfRails_Launcher.Helper.Utils;
+using Utils = LandOfRailsLauncher.Helper.Utils;
 
-namespace LandOfRails_Launcher
+namespace LandOfRailsLauncher
 {
     /// <summary>
     /// Interaktionslogik für LoginWindow.xaml
