@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 
 namespace LandOfRailsLauncher.Helper
@@ -101,13 +96,13 @@ namespace LandOfRailsLauncher.Helper
 
                 //Process.Start("deleteMyProgram.bat");
 
-                //Process.Start(new ProcessStartInfo()
-                //{
-                //    Arguments = "/C choice /C Y /N /D Y /T 3 & Del \"" + Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\").Replace(".exe", ".old.exe") + "\"",
-                //    WindowStyle = ProcessWindowStyle.Hidden,
-                //    CreateNoWindow = true,
-                //    FileName = "cmd.exe"
-                //});
+                Process.Start(new ProcessStartInfo()
+                {
+                    Arguments = "/C choice /C Y /N /D Y /T 3 & Del \"" + Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\").Replace(".exe", ".old.exe") + "\"",
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    FileName = "cmd.exe"
+                });
 
                 Application.Current.Shutdown(); });
         }

@@ -10,21 +10,20 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using LandOfRailsLauncher.Helper;
 using LandOfRailsLauncher.Models;
-using LandOfRailsLauncher.Window;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 
-namespace LandOfRailsLauncher
+namespace LandOfRailsLauncher.Window
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow
     {
         private string path;
         private Modpack currentSelectedModpack;
         private Dictionary<Modpack, BitmapImage> images = new Dictionary<Modpack, BitmapImage>();
-        Helper.DiscordRPC discord;
+        //Helper.DiscordRPC discord;
 
         private int lastSelected = 999;
 
@@ -45,7 +44,8 @@ namespace LandOfRailsLauncher
 
             ModpackImage.Source = images[Static.Modpacks[0]];
 
-            discord = new Helper.DiscordRPC();
+            //discord = new Helper.DiscordRPC();
+            //discord.SetIdle();
         }
 
         private void startButton_Click(object sender, RoutedEventArgs e)
@@ -68,7 +68,7 @@ namespace LandOfRailsLauncher
 #pragma warning disable 4014
             RefreshListAsync();
 #pragma warning restore 4014
-            discord.SetIdle();
+            //discord.SetIdle();
             //Check for Launcher updates
         }
 

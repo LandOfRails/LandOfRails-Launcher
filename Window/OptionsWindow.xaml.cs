@@ -1,37 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using LandOfRailsLauncher.Models;
 using LandOfRailsLauncher.Properties;
 using Microsoft.VisualBasic.Devices;
-using Path = System.IO.Path;
 
 namespace LandOfRailsLauncher.Window
 {
     /// <summary>
     /// Interaktionslogik für OptionsWindow.xaml
     /// </summary>
-    public partial class OptionsWindow : System.Windows.Window
+    public partial class OptionsWindow
     {
-        private int oldRAM = Properties.Settings.Default.RAM;
+        private int oldRAM = Settings.Default.RAM;
         public OptionsWindow()
         {
             InitializeComponent();
             Settings.Default.Upgrade();
-            ramSlider.Maximum = new ComputerInfo().TotalPhysicalMemory / 1e+6 - 2000;
-            ramSlider.Value = Properties.Settings.Default.RAM;
+            ramSlider.Maximum = new ComputerInfo().AvailablePhysicalMemory/* / 1e+6 - 2000*/;
+            ramSlider.Value = Settings.Default.RAM;
             consoleCheckBox.IsChecked = Settings.Default.openConsole;
         }
 
@@ -69,24 +58,24 @@ namespace LandOfRailsLauncher.Window
 
         private void writeRAM()
         {
-            Properties.Settings.Default.RAM = Convert.ToInt32(ramSlider.Value);
+            Settings.Default.RAM = Convert.ToInt32(ramSlider.Value);
         }
 
         private void SaveButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.Save();
+            Settings.Default.Save();
         }
 
         private void OKButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.Save();
-            this.Close();
+            Settings.Default.Save();
+            Close();
         }
 
         private void CancelButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.RAM = oldRAM;
-            this.Close();
+            Settings.Default.RAM = oldRAM;
+            Close();
         }
 
         private void DeleteCredentials_OnClick(object sender, RoutedEventArgs e)

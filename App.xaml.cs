@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,10 +9,10 @@ namespace LandOfRailsLauncher
     /// <summary>
     /// Interaktionslogik für "App.xaml"
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        public static bool Update = false;
+        public static bool Update = true;
         public static bool GUI = true;
         public static LoginWindow window;
 

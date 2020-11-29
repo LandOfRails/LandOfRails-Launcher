@@ -29,7 +29,17 @@ namespace LandOfRailsLauncher.Helper
             presence.Assets.LargeImageKey = "lor_1024_klein_neu";
             presence.Assets.LargeImageText = "LandOfRails Launcher";
             presence.Details = "Kommt noch...";
-            presence.State = "In Launcher";
+            presence.State = "Im Launcher";
+            presence.Timestamps = Timestamps.Now;
+            client.SetPresence(presence);
+        }
+
+        public void SetModpack(string title)
+        {
+            presence.Assets.LargeImageKey = "lor_1024_klein_neu";
+            presence.Assets.LargeImageText = "LandOfRails Launcher";
+            presence.Details = "Kommt noch...";
+            presence.State = title;
             presence.Timestamps = Timestamps.Now;
             client.SetPresence(presence);
         }

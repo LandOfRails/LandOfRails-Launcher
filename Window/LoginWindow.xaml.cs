@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 using System.Windows;
 using LandOfRailsLauncher.Helper;
 using LandOfRailsLauncher.Properties;
-using Microsoft.VisualBasic.CompilerServices;
-using Utils = LandOfRailsLauncher.Helper.Utils;
+using LandOfRailsLauncher.Window;
 
 namespace LandOfRailsLauncher
 {
     /// <summary>
     /// Interaktionslogik für LoginWindow.xaml
     /// </summary>
-    public partial class LoginWindow : System.Windows.Window
+    public partial class LoginWindow
     {
         private bool remember;
         private readonly string path = Path.Combine(

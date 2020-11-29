@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Core;
 using Ionic.Zip;
 using LandOfRailsLauncher.MinecraftLaunch;
@@ -12,9 +11,7 @@ using LandOfRailsLauncher.MinecraftLaunch.Core;
 using LandOfRailsLauncher.Models;
 using LandOfRailsLauncher.Properties;
 using LandOfRailsLauncher.Window;
-using Microsoft.VisualBasic.Devices;
 using Newtonsoft.Json;
-using MessageBox = System.Windows.MessageBox;
 
 namespace LandOfRailsLauncher.Helper
 {
@@ -33,9 +30,9 @@ namespace LandOfRailsLauncher.Helper
         ProcessWindow processWindow;
 
         private bool updateQuestionsFinished = true;
-        private bool update = false;
+        private bool update;
 
-        private bool cancel = false;
+        private bool cancel;
 
         private readonly BackgroundWorker extractFile;
         private readonly BackgroundWorker extractVersionFile;
@@ -97,7 +94,7 @@ namespace LandOfRailsLauncher.Helper
             MJava java = new MJava();
             var javaBinary = java.CheckJava();
 
-            var option = new MLaunchOption()
+            var option = new MLaunchOption
             {
                 GameLauncherName = "LandOfRailsLauncher",
                 GameLauncherVersion = "0.1",
@@ -105,7 +102,7 @@ namespace LandOfRailsLauncher.Helper
                 Session = session,
                 StartProfile = profile,
 
-                MaximumRamMb = Properties.Settings.Default.RAM,
+                MaximumRamMb = Settings.Default.RAM,
             };
 
             string forgeVersion;
