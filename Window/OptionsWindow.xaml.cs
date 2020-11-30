@@ -19,7 +19,7 @@ namespace LandOfRailsLauncher.Window
         {
             InitializeComponent();
             Settings.Default.Upgrade();
-            ramSlider.Maximum = new ComputerInfo().AvailablePhysicalMemory/* / 1e+6 - 2000*/;
+            ramSlider.Maximum = new ComputerInfo().TotalPhysicalMemory / 1e+6 - 3000;
             ramSlider.Value = Settings.Default.RAM;
             consoleCheckBox.IsChecked = Settings.Default.openConsole;
         }

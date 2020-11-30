@@ -17,6 +17,7 @@ namespace LandOfRailsLauncher.Helper
         private static Version LatestVersion;
         private static bool NeedsUpdate = false;
         private static readonly string NewExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath) ?? string.Empty, "LandOfRails-Launcher.exe");
+        private static readonly string OldExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "LandOfRails-Launcher.old.exe");
 
         public static async Task<bool> CheckForUpdate()
         {
@@ -45,11 +46,22 @@ namespace LandOfRailsLauncher.Helper
             }
 
             if (NeedsUpdate) await StartUpdate();
+            else if (File.Exists(Path.Combine(Path.GetDirectoryName(Utils.ExePath), "LandOfRails-Launcher.old.exe")))
+            {
+                try
+                {
+                    File.Delete(OldExe);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Old file delete failed.");
+                    Console.WriteLine(e);
+                }
+            }
         }
 
         public static async Task StartUpdate()
         {
-            string OldExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "LandOfRails-Launcher.old.exe");
             string DownloadLink = null;
 
             foreach (Update.Asset asset in LatestUpdate.assets)
