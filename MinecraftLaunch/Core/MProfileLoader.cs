@@ -29,20 +29,17 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             var dirs = new DirectoryInfo(mc.Versions).GetDirectories();
             var arr = new List<MProfileMetadata>(dirs.Length);
 
-            for (int i = 0; i < dirs.Length; i++)
+            foreach (var dir in dirs)
             {
-                var dir = dirs[i];
                 var filepath = Path.Combine(dir.FullName, dir.Name + ".json");
-                if (File.Exists(filepath))
-                {
-                    var info = new MProfileMetadata();
-                    info.IsWeb = false;
-                    info.Name = dir.Name;
-                    info.Path = filepath;
-                    info.Type = "local";
-                    info.MType = MProfileType.Custom;
-                    arr.Add(info);
-                }
+                if (!File.Exists(filepath)) continue;
+                var info = new MProfileMetadata();
+                info.IsWeb = false;
+                info.Name = dir.Name;
+                info.Path = filepath;
+                info.Type = "local";
+                info.MType = MProfileType.Custom;
+                arr.Add(info);
             }
 
             return arr.ToArray();

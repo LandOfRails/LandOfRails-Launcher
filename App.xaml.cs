@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using LandOfRailsLauncher.Helper;
+using log4net;
 
 namespace LandOfRailsLauncher
 {
@@ -15,6 +17,14 @@ namespace LandOfRailsLauncher
         public static bool Update = true;
         public static bool GUI = true;
         public static LoginWindow window;
+
+        private static readonly ILog log = LogManager.GetLogger(typeof(App));
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            log4net.Config.XmlConfigurator.Configure();
+            log.Info("        =============  Started Logging  =============        ");
+            base.OnStartup(e);
+        }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {

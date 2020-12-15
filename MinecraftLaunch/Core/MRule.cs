@@ -50,16 +50,20 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 
                 foreach (var item in job)
                 {
-                    // action
-                    if (item.Key == "action")
-                        action = (item.Value.ToString() == "allow" ? true : false);
-
-                    // os (containCurrentOS)
-                    else if (item.Key == "os")
-                        containCurrentOS = checkOSContains((JObject)item.Value);
-
-                    else if (item.Key == "features") // etc
-                        return false;
+                    switch (item.Key)
+                    {
+                        // action
+                        // os (containCurrentOS)
+                        case "action":
+                            action = (item.Value.ToString() == "allow" ? true : false);
+                            break;
+                        case "os":
+                            containCurrentOS = checkOSContains((JObject)item.Value);
+                            break;
+                        // etc
+                        case "features":
+                            return false;
+                    }
                 }
 
                 if (!action && containCurrentOS)

@@ -11,29 +11,19 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
     {
         public static MProfile FindProfile(Minecraft mc, MProfileMetadata[] infos, string name)
         {
-            MProfile startProfile = null;
             MProfile baseProfile = null;
 
-            foreach (var item in infos)
-            {
-                if (item.Name == name)
-                {
-                    startProfile = Parse(mc, item);
-                    break;
-                }
-            }
+            MProfile startProfile = (from item in infos where item.Name == name select Parse(mc, item)).FirstOrDefault();
 
             if (startProfile == null)
                 throw new Exception(name + " not found");
 
-            if (startProfile.IsInherted)
-            {
-                if (startProfile.ParentProfileId == startProfile.Id) // prevent StackOverFlowException
-                    throw new IOException("Invalid Profile : inheritFrom property is equal to id property.");
+            if (!startProfile.IsInherted) return startProfile;
+            if (startProfile.ParentProfileId == startProfile.Id) // prevent StackOverFlowException
+                throw new IOException("Invalid Profile : inheritFrom property is equal to id property.");
 
-                baseProfile = FindProfile(mc, infos, startProfile.ParentProfileId);
-                inhert(baseProfile, startProfile);
-            }
+            baseProfile = FindProfile(mc, infos, startProfile.ParentProfileId);
+            inhert(baseProfile, startProfile);
 
             return startProfile;
         }
@@ -137,18 +127,13 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 
                     var value = item["value"] ?? item["values"];
 
-                    if (allow && value != null)
+                    if (!allow || value == null) continue;
+                    if (value is JArray)
                     {
-                        if (value is JArray)
-                        {
-                            foreach (var str in value)
-                            {
-                                strList.Add(str.ToString());
-                            }
-                        }
-                        else
-                            strList.Add(value.ToString());
+                        strList.AddRange(value.Select(str => str.ToString()));
                     }
+                    else
+                        strList.Add(value.ToString());
                 }
                 else
                     strList.Add(item.ToString());
@@ -192,27 +177,18 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 
             if (parentProfile.Libraries != null)
             {
-                if (childProfile.Libraries != null)
-                    childProfile.Libraries = childProfile.Libraries.Concat(parentProfile.Libraries).ToArray();
-                else
-                    childProfile.Libraries = parentProfile.Libraries;
+                childProfile.Libraries = childProfile.Libraries != null ? childProfile.Libraries.Concat(parentProfile.Libraries).ToArray() : parentProfile.Libraries;
             }
 
             if (parentProfile.GameArguments != null)
             {
-                if (childProfile.GameArguments != null)
-                    childProfile.GameArguments = childProfile.GameArguments.Concat(parentProfile.GameArguments).ToArray();
-                else
-                    childProfile.GameArguments = parentProfile.GameArguments;
+                childProfile.GameArguments = childProfile.GameArguments != null ? childProfile.GameArguments.Concat(parentProfile.GameArguments).ToArray() : parentProfile.GameArguments;
             }
 
 
             if (parentProfile.JvmArguments != null)
             {
-                if (childProfile.JvmArguments != null)
-                    childProfile.JvmArguments = childProfile.JvmArguments.Concat(parentProfile.JvmArguments).ToArray();
-                else
-                    childProfile.JvmArguments = parentProfile.JvmArguments;
+                childProfile.JvmArguments = childProfile.JvmArguments != null ? childProfile.JvmArguments.Concat(parentProfile.JvmArguments).ToArray() : parentProfile.JvmArguments;
             }
 
             return childProfile;
@@ -220,7 +196,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 
         static string n(string t) // handle null string
         {
-            return (t == null) ? "" : t;
+            return t ?? "";
         }
 
         static bool nc(string t) // check null string

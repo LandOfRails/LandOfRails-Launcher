@@ -83,7 +83,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
         private void WriteLogin(MSession session)
         {
             if (!SaveSession) return;
-            Directory.CreateDirectory(Path.GetDirectoryName(TokenFile));
+            Directory.CreateDirectory(Path.GetDirectoryName(TokenFile) ?? string.Empty);
 
             if (string.IsNullOrEmpty(session.ClientToken))
                 session.ClientToken = CreateNewClientToken();

@@ -36,11 +36,9 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             {
                 try
                 {
-                    if (item.IsNative)
-                    {
-                        var z = new SharpZip(item.Path);
-                        z.Unzip(path);
-                    }
+                    if (!item.IsNative) continue;
+                    var z = new SharpZip(item.Path);
+                    z.Unzip(path);
                 }
                 catch { }
             }

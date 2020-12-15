@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using LandOfRailsLauncher.Helper;
 using LandOfRailsLauncher.Models;
+using log4net;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 
@@ -27,8 +29,11 @@ namespace LandOfRailsLauncher.Window
 
         private int lastSelected = 999;
 
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public MainWindow()
         {
+            log4net.Config.XmlConfigurator.Configure();
             path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "LandOfRails Launcher");
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
@@ -43,6 +48,10 @@ namespace LandOfRailsLauncher.Window
             startButton.Content = "Starten";
 
             ModpackImage.Source = images[Static.Modpacks[0]];
+
+            Title = "LandOfRails Launcher v" + Assembly.GetExecutingAssembly().GetName().Version;
+
+            log.Info("Init main window completed.");
 
             //discord = new Helper.DiscordRPC();
             //discord.SetIdle();
@@ -74,51 +83,67 @@ namespace LandOfRailsLauncher.Window
 
         private async Task RefreshListAsync()
         {
-            using (WebClient wc = new WebClient())
+            try
             {
-                var json = wc.DownloadString("https://launcher.landofrails.net/ModpackList.json");
-                Static.Modpacks = JsonConvert.DeserializeObject<List<Modpack>>(json);
-            }
-
-            Static.Modpacks = Static.Modpacks.OrderBy(t => t.Organisation).ToList();
-            foreach (var modpack in Static.Modpacks)
-            {
-                //Downloaded Icon stuff
-                if (!Static.login.isDownloaded(modpack))
-                    modpack.DownloadedImage = "https://image.flaticon.com/icons/png/512/0/532.png";
-
-                //Background Image stuff
-                images.Add(modpack, new BitmapImage(new Uri(modpack.ImageUrl)));
-                if (Static.login.isDownloaded(modpack))
+                using (WebClient wc = new WebClient())
                 {
-                    modpack.CurrentVersion = Static.login.getCurrentVersion(modpack);
-                    if (!Static.login.updateAvailable(modpack))
+                    var json = wc.DownloadString("https://launcher.landofrails.net/ModpackList.json");
+                    Static.Modpacks = JsonConvert.DeserializeObject<List<Modpack>>(json);
+                }
+
+                Static.Modpacks = Static.Modpacks.OrderBy(t => t.Organisation).ToList();
+                foreach (var modpack in Static.Modpacks)
+                {
+                    //Downloaded Icon stuff
+                    if (!Static.login.isDownloaded(modpack))
+                        modpack.DownloadedImage = "https://image.flaticon.com/icons/png/512/0/532.png";
+
+                    //Background Image stuff
+                    images.Add(modpack, new BitmapImage(new Uri(modpack.ImageUrl)));
+                    if (Static.login.isDownloaded(modpack))
                     {
+                        modpack.CurrentVersion = Static.login.getCurrentVersion(modpack);
+                        if (!Static.login.updateAvailable(modpack))
+                        {
+                            modpack.ModpackVersion = String.Empty;
+                        }
+                    }
+                    else
+                    {
+                        modpack.CurrentVersion = modpack.ModpackVersion;
                         modpack.ModpackVersion = String.Empty;
                     }
                 }
-                else
+
+                modpackList.ItemsSource = Static.Modpacks;
+                if (lastSelected != 999)
                 {
-                    modpack.CurrentVersion = modpack.ModpackVersion;
-                    modpack.ModpackVersion = String.Empty;
+                    modpackList.SelectedIndex = lastSelected;
                 }
+
             }
-            modpackList.ItemsSource = Static.Modpacks;
-            if (lastSelected != 999)
+            catch (Exception e)
             {
-                modpackList.SelectedIndex = lastSelected;
+                log.Error("RefreshListAsync", e);
             }
         }
 
         private void ModpackList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (Modpack modpack in modpackList.SelectedItems)
+            try
             {
-                ModpackImage.Source = images[modpack];
-                currentSelectedModpack = modpack;
-                startButton.Content = Static.login.isDownloaded(modpack) ? "Starten" : "Herunterladen";
-                lastSelected = modpackList.SelectedIndex;
-                break;
+                foreach (Modpack modpack in modpackList.SelectedItems)
+                {
+                    ModpackImage.Source = images[modpack];
+                    currentSelectedModpack = modpack;
+                    startButton.Content = Static.login.isDownloaded(modpack) ? "Starten" : "Herunterladen";
+                    lastSelected = modpackList.SelectedIndex;
+                    break;
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Error selecting Modpack", exception);
             }
         }
         private void OpenFolder_OnClick(object sender, RoutedEventArgs e)

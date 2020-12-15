@@ -62,10 +62,7 @@
 
         public static bool CheckOld(MProfileType t)
         {
-            if (t == MProfileType.OldAlpha || t == MProfileType.OldBeta)
-                return true;
-            else
-                return false;
+            return t == MProfileType.OldAlpha || t == MProfileType.OldBeta;
         }
     }
 

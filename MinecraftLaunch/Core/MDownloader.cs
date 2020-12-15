@@ -64,6 +64,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
                 }
                 catch
                 {
+                    // ignored
                 }
 
                 l(MFile.Library, item.Name, maxCount, ++index); // event
@@ -85,14 +86,12 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
         {
             string path = Path.Combine(Minecraft.Index, profile.AssetId + ".json");
 
-            if (profile.AssetUrl != "" && !CheckFileValidation(path, profile.AssetHash))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            if (profile.AssetUrl == "" || CheckFileValidation(path, profile.AssetHash)) return;
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-                using (var wc = new WebClient())
-                {
-                    wc.DownloadFile(profile.AssetUrl, path);
-                }
+            using (var wc = new WebClient())
+            {
+                wc.DownloadFile(profile.AssetUrl, path);
             }
         }
 
@@ -214,7 +213,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
                 if (!CheckHash)
                     return true;
 
-                if (compareHash == null || compareHash == "")
+                if (string.IsNullOrEmpty(compareHash))
                     return true;
 
                 var fileHash = "";

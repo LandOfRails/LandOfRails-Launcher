@@ -26,10 +26,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
         public static string GetChangelogUrl(string version)
         {
             var url = "";
-            if (changelogUrls.TryGetValue(version, out url))
-                return url;
-            else
-                return null;
+            return changelogUrls.TryGetValue(version, out url) ? url : null;
         }
 
         static Regex articleRegex = new Regex("<article class=\\\"article\\\">(.*)<\\/article>", RegexOptions.Singleline);
@@ -49,10 +46,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             System.IO.File.WriteAllText("test.txt", html);
 
             var regResult = articleRegex.Match(html);
-            if (!regResult.Success)
-                return "";
-
-            return regResult.Value;
+            return !regResult.Success ? "" : regResult.Value;
         }
     }
 }

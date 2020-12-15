@@ -47,11 +47,9 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Utils
                 return;
 
             var progress = (int)((double)curr / (double)total * 100);
-            if (previousPerc != progress)
-            {
-                previousPerc = progress;
-                ProgressEvent.Invoke(this, progress);
-            }
+            if (previousPerc == progress) return;
+            previousPerc = progress;
+            ProgressEvent.Invoke(this, progress);
         }
     }
 }

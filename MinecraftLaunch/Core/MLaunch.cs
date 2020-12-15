@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -12,8 +13,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
         private const int DefaultServerPort = 25565;
 
         public const string SupportVersion = "1.15.2";
-        public readonly static string[] DefaultJavaParameter = new string[]
-            {
+        public static readonly string[] DefaultJavaParameter = {
                 "-XX:+UnlockExperimentalVMOptions",
                 "-XX:+UseG1GC",
                 "-XX:G1NewSizePercent=20",
@@ -26,11 +26,11 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
         {
             option.CheckValid();
             LaunchOption = option;
-            this.Minecraft = option.StartProfile.Minecraft;
+            Minecraft = option.StartProfile.Minecraft;
         }
 
         Minecraft Minecraft;
-        public MLaunchOption LaunchOption { get; private set; }
+        public MLaunchOption LaunchOption { get; }
 
         /// <summary>
         /// Start Game
@@ -82,18 +82,13 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 
             // Version-specific JVM Arguments
             var libArgs = new List<string>(profile.Libraries.Length);
-
-            foreach (var item in profile.Libraries)
-            {
-                if (!item.IsNative)
-                    libArgs.Add(handleEmpty(Path.GetFullPath(item.Path)));
-            }
+            libArgs.AddRange(from item in profile.Libraries where !item.IsNative select handleEmpty(Path.GetFullPath(item.Path)));
 
             libArgs.Add(handleEmpty(Path.Combine(Minecraft.Versions, profile.Jar, profile.Jar + ".jar")));
 
             var libs = string.Join(Path.PathSeparator.ToString(), libArgs);
 
-            var jvmdict = new Dictionary<string, string>()
+            var jvmdict = new Dictionary<string, string>
             {
                 { "natives_directory", handleEmpty(profile.NativePath) },
                 { "launcher_name", useNotNull(LaunchOption.GameLauncherName, "minecraft-launcher") },
@@ -112,7 +107,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             args.Add(profile.MainClass);
 
             // Game Arguments
-            var gameDict = new Dictionary<string, string>()
+            var gameDict = new Dictionary<string, string>
             {
                 { "auth_player_name", LaunchOption.Session.Username },
                 { "version_name", LaunchOption.StartProfile.Id },
@@ -128,10 +123,9 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
                 { "version_type", useNotNull(LaunchOption.VersionType, profile.TypeStr) }
             };
 
-            if (profile.GameArguments != null)
-                args.AddRange(argumentInsert(profile.GameArguments, gameDict));
-            else
-                args.AddRange(argumentInsert(profile.MinecraftArguments.Split(' '), gameDict));
+            args.AddRange(profile.GameArguments != null
+                ? argumentInsert(profile.GameArguments, gameDict)
+                : argumentInsert(profile.MinecraftArguments.Split(' '), gameDict));
 
             // Options
             if (!string.IsNullOrEmpty(LaunchOption.ServerIp))
@@ -142,11 +136,9 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
                     args.Add("--port " + LaunchOption.ServerPort);
             }
 
-            if (LaunchOption.ScreenWidth > 0 && LaunchOption.ScreenHeight > 0)
-            {
-                args.Add("--width " + LaunchOption.ScreenWidth);
-                args.Add("--height " + LaunchOption.ScreenHeight);
-            }
+            if (LaunchOption.ScreenWidth <= 0 || LaunchOption.ScreenHeight <= 0) return args.ToArray();
+            args.Add("--width " + LaunchOption.ScreenWidth);
+            args.Add("--height " + LaunchOption.ScreenHeight);
 
             return args.ToArray();
         }
@@ -163,10 +155,9 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
                     var argKey = m.Groups[1].Value; // ${argKey}
                     var argValue = "";
 
-                    if (dicts.TryGetValue(argKey, out argValue))
-                        args.Add(replaceByPos(item, argValue, m.Index, m.Length)); // replace ${argKey} to dicts value
-                    else
-                        args.Add(item);
+                    args.Add(dicts.TryGetValue(argKey, out argValue)
+                        ? replaceByPos(item, argValue, m.Index, m.Length)
+                        : item);
                 }
                 else
                     args.Add(handleEArg(item));
@@ -185,31 +176,24 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 
         string useNotNull(string input1, string input2)
         {
-            if (string.IsNullOrEmpty(input1))
-                return handleEmpty(input2);
-            else
-                return handleEmpty(input1);
+            return handleEmpty(string.IsNullOrEmpty(input1) ? input2 : input1);
         }
 
         // handle empty string in --key=value style argument
         // --key=va lue => --key="va lue"
         string handleEArg(string input)
         {
-            if (input.Contains(" ") && input.Contains("="))
-            {
-                var s = input.Split('=');
-                return s[0] + "=\"" + s[1] + "\"";
-            }
-            else
-                return input;
+            if (!input.Contains(" ") || !input.Contains("=")) return input;
+            var s = input.Split('=');
+            return s[0] + "=\"" + s[1] + "\"";
+
         }
 
         string handleEmpty(string input)
         {
             if (input.Contains(" "))
                 return "\"" + input + "\"";
-            else
-                return input;
+            return input;
         }
     }
 }

@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+using Timer = System.Timers.Timer;
 
 namespace LandOfRailsLauncher.Window
 {
     /// <summary>
     /// Interaktionslogik für ProcessWindow.xaml
     /// </summary>
-    public partial class ProcessWindow : System.Windows.Window
+    public partial class ProcessWindow
     {
         private Process minecraftProcess;
         public ProcessWindow()
@@ -32,13 +23,25 @@ namespace LandOfRailsLauncher.Window
         {
             minecraftProcess = process;
 
-            minecraftProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-            minecraftProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+            minecraftProcess.OutputDataReceived += OutputHandler;
+            minecraftProcess.ErrorDataReceived += OutputHandler;
 
             minecraftProcess.Start();
             minecraftProcess.BeginOutputReadLine();
             minecraftProcess.WaitForExit();
+
+            Timer timer = new Timer(2000);
+            timer.Elapsed += TimerOnElapsed;
+            timer.AutoReset = true;
+            timer.Enabled = true;
         }
+
+        private void TimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            consoleText.Text = text;
+            ScrollViewer.ScrollToBottom();
+        }
+
         private void KillButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (minecraftProcess == null)
@@ -50,12 +53,13 @@ namespace LandOfRailsLauncher.Window
                 minecraftProcess.Kill();
         }
 
+        private String text;
+
         private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
-                consoleText.Text += "\n" + outLine.Data;
-                ScrollViewer.ScrollToBottom();
+                text += "\n" + outLine.Data;
             }));
         }
     }

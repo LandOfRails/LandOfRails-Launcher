@@ -82,14 +82,12 @@ namespace LandOfRailsLauncher.MinecraftLaunch
                 UpdateProfiles();
 
             var versionname = GetVersionNameByForge(mcversion, forgeversion);
-            if (!Profiles.Any(x => x.Name == versionname))
-            {
-                var mforge = new MForge(Minecraft);
-                mforge.FileChanged += (e) => fire(e);
-                mforge.InstallForge(mcversion, forgeversion);
+            if (Profiles.Any(x => x.Name == versionname)) return versionname;
+            var mforge = new MForge(Minecraft);
+            mforge.FileChanged += (e) => fire(e);
+            mforge.InstallForge(mcversion, forgeversion);
 
-                UpdateProfiles();
-            }
+            UpdateProfiles();
 
             return versionname;
         }

@@ -78,7 +78,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
                         }
                         
                         // library
-                        if (classifiers == null && artifact == null)
+                        if (classifiers != null || artifact != null) continue;
                         {
                             var obj = createMLibrary(libraryPath, name, "", item);
                             list.Add(obj);
@@ -115,7 +115,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             private static MLibrary createMLibrary(string libraryPath, string name, string nativeId, JObject job)
             {
                 var path = job["path"]?.ToString();
-                if (path == null || path == "")
+                if (string.IsNullOrEmpty(path))
                     path = NameToPath(name, nativeId);
 
                 var url = job["url"]?.ToString();

@@ -11,6 +11,7 @@ using LandOfRailsLauncher.MinecraftLaunch.Core;
 using LandOfRailsLauncher.Models;
 using LandOfRailsLauncher.Properties;
 using LandOfRailsLauncher.Window;
+using log4net;
 using Newtonsoft.Json;
 
 namespace LandOfRailsLauncher.Helper
@@ -47,8 +48,11 @@ namespace LandOfRailsLauncher.Helper
         private MSession session;
         private MProfile profile;
 
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public StartHandler()
         {
+            log4net.Config.XmlConfigurator.Configure();
             startButtonEnabled = true;
 
             progressMaxValue = 100;
@@ -112,7 +116,12 @@ namespace LandOfRailsLauncher.Helper
             }
 
             var process = launcher.CreateProcess(modpack.MinecraftVersion, forgeVersion, option);
-            if (Settings.Default.openConsole) processWindow.Start(process);
+            if (Settings.Default.openConsole)
+            {
+                processWindow = new ProcessWindow();
+                processWindow.Show();
+                processWindow.Start(process);
+            }
             else process.Start();
         }
 
@@ -303,8 +312,6 @@ namespace LandOfRailsLauncher.Helper
                 }
             else
             {
-                processWindow = new ProcessWindow();
-                processWindow.Show();
                 StartSession();
             }
 
@@ -332,11 +339,14 @@ namespace LandOfRailsLauncher.Helper
             {
                 Version currentVersion = new Version(getCurrentVersion(modpack));
                 Version modpackVersion = new Version(modpack.ModpackVersion);
-                return modpackVersion > currentVersion;
+                //return modpackVersion > currentVersion;
+                var result = modpackVersion.CompareTo(currentVersion);
+                return result > 0;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e + "\n" + getCurrentVersion(modpack));
+                log.Error("updateAvailable Version: " + getCurrentVersion(modpack)+"-", e);
             }
 
             return false;

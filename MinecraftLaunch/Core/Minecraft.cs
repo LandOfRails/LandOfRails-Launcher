@@ -5,7 +5,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
     public class Minecraft
     {
-        public readonly static string
+        public static readonly string
     MacDefaultPath = Environment.GetEnvironmentVariable("HOME") + "/Library/Application Support/LandOfRails Launcher",
     LinuxDefaultPath = Environment.GetEnvironmentVariable("HOME") + "/.LandOfRails Launcher",
     WindowsDefaultPath = Environment.GetEnvironmentVariable("appdata") + "\\LandOfRails Launcher";

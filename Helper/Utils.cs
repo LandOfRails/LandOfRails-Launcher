@@ -9,6 +9,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using log4net;
 
 namespace LandOfRailsLauncher.Helper
 {
@@ -16,6 +17,12 @@ namespace LandOfRailsLauncher.Helper
     {
         public static bool IsAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
         public static string ExePath = Process.GetCurrentProcess().MainModule.FileName;
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public Utils()
+        {
+            log4net.Config.XmlConfigurator.Configure();
+        }
 
         public static void SendNotify(string message, string title = null)
         {
@@ -50,9 +57,10 @@ namespace LandOfRailsLauncher.Helper
                         process.WaitForExit();
                     }
                 }
-                catch
+                catch (Exception e)
                 {
                     MessageBox.Show((string)Application.Current.FindResource("Utils:RunAsAdmin"));
+                    log.Error("StartAsAdmin", e);
                 }
 
                 if (Close) Application.Current.Shutdown();
@@ -60,11 +68,18 @@ namespace LandOfRailsLauncher.Helper
         }
         public static async Task Download(string link, string output)
         {
-            var resp = await Http.HttpClient.GetAsync(link);
-            using (var stream = await resp.Content.ReadAsStreamAsync())
-            using (var fs = new FileStream(output, FileMode.OpenOrCreate, FileAccess.Write))
+            try
             {
-                await stream.CopyToAsync(fs);
+                var resp = await Http.HttpClient.GetAsync(link);
+                using (var stream = await resp.Content.ReadAsStreamAsync())
+                using (var fs = new FileStream(output, FileMode.OpenOrCreate, FileAccess.Write))
+                {
+                    await stream.CopyToAsync(fs);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Download", e);
             }
         }
     }

@@ -26,7 +26,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Utils
             }
             catch
             {
-
+                // ignored
             }
         }
 

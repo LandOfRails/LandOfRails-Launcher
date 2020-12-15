@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using log4net;
 using Newtonsoft.Json;
 
 namespace LandOfRailsLauncher.Helper
@@ -18,16 +19,28 @@ namespace LandOfRailsLauncher.Helper
         private static bool NeedsUpdate = false;
         private static readonly string NewExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath) ?? string.Empty, "LandOfRails-Launcher.exe");
         private static readonly string OldExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "LandOfRails-Launcher.old.exe");
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public Updater()
+        {
+            log4net.Config.XmlConfigurator.Configure();
+        }
 
         public static async Task<bool> CheckForUpdate()
         {
-            var resp = await Http.HttpClient.GetAsync(APILatestURL);
-            var body = await resp.Content.ReadAsStringAsync();
-            LatestUpdate = JsonConvert.DeserializeObject<Update>(body);
+            try
+            {
+                var resp = await Http.HttpClient.GetAsync(APILatestURL);
+                var body = await resp.Content.ReadAsStringAsync();
+                LatestUpdate = JsonConvert.DeserializeObject<Update>(body);
 
-            LatestVersion = new Version(LatestUpdate.tag_name.Substring(1));
-            CurrentVersion = new Version(App.Version);
-
+                LatestVersion = new Version(LatestUpdate.tag_name.Substring(1));
+                CurrentVersion = new Version(App.Version);
+            }
+            catch (Exception e)
+            {
+                log.Error("CheckForUpdate", e);
+            }
             return (LatestVersion > CurrentVersion);
         }
 
@@ -43,6 +56,7 @@ namespace LandOfRailsLauncher.Helper
                 //Utils.SendNotify((string)Application.Current.FindResource("Updater:CheckFailed"));
                 Console.WriteLine("Update Check failed.");
                 Console.WriteLine(e);
+                log.Error("CheckForUpdate", e);
             }
 
             if (NeedsUpdate) await StartUpdate();
@@ -56,67 +70,60 @@ namespace LandOfRailsLauncher.Helper
                 {
                     Console.WriteLine("Old file delete failed.");
                     Console.WriteLine(e);
+                    log.Error("Delete old exe", e);
                 }
             }
         }
 
         public static async Task StartUpdate()
         {
-            string DownloadLink = null;
+            try
+            {
+                string DownloadLink = null;
 
-            foreach (Update.Asset asset in LatestUpdate.assets)
-            {
-                if (asset.name.Equals("LandOfRails-Launcher.exe"))
+                foreach (Update.Asset asset in LatestUpdate.assets)
                 {
-                    DownloadLink = asset.browser_download_url;
-                }
-            }
-
-            if (string.IsNullOrEmpty(DownloadLink))
-            {
-                //Utils.SendNotify((string)Application.Current.FindResource("Updater:DownloadFailed"));
-                Console.WriteLine("Download of new version failed.");
-            }
-            else
-            {
-                if (File.Exists(OldExe))
-                {
-                    File.Delete(OldExe);
+                    if (asset.name.Equals("LandOfRails-Launcher.exe"))
+                    {
+                        DownloadLink = asset.browser_download_url;
+                    }
                 }
 
-                File.Move(Utils.ExePath, OldExe);
+                if (string.IsNullOrEmpty(DownloadLink))
+                {
+                    //Utils.SendNotify((string)Application.Current.FindResource("Updater:DownloadFailed"));
+                    Console.WriteLine("Download of new version failed.");
+                }
+                else
+                {
+                    if (File.Exists(OldExe))
+                    {
+                        File.Delete(OldExe);
+                    }
 
-                await Utils.Download(DownloadLink, NewExe);
-                RunNew();
+                    File.Move(Utils.ExePath, OldExe);
+
+                    await Utils.Download(DownloadLink, NewExe);
+                    RunNew();
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("StartUpdate", e);
             }
         }
 
         private static void RunNew()
         {
-            Process.Start(NewExe);
-            Application.Current.Dispatcher.Invoke(() => {
-                //string batchCommands = string.Empty;
-                //string exeFileName = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\").Replace(".exe", ".old.exe");
-
-                //batchCommands += "@ECHO OFF\n";                         // Do not show any output
-                //batchCommands += "ping 127.0.0.1 > nul\n";              // Wait approximately 4 seconds (so that the process is already terminated)
-                //batchCommands += "echo j | del /F ";                    // Delete the executeable
-                //batchCommands += exeFileName + "\n";
-                //batchCommands += "echo j | del deleteMyProgram.bat";    // Delete this bat file
-
-                //File.WriteAllText("deleteMyProgram.bat", batchCommands);
-
-                //Process.Start("deleteMyProgram.bat");
-
-                //Process.Start(new ProcessStartInfo()
-                //{
-                //    Arguments = "/C choice /C Y /N /D Y /T 3 & Del \"" + Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\").Replace(".exe", ".old.exe") + "\"",
-                //    WindowStyle = ProcessWindowStyle.Hidden,
-                //    CreateNoWindow = true,
-                //    FileName = "cmd.exe"
-                //});
-
-                Application.Current.Shutdown(); });
+            try
+            {
+                Process.Start(NewExe);
+                Application.Current.Dispatcher.Invoke(() => { Application.Current.Shutdown(); });
+            }
+            catch (Exception e)
+            {
+                log.Error("RunNew", e);
+            }
         }
     }
 

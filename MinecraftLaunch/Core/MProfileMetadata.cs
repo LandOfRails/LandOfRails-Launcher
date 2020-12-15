@@ -28,21 +28,18 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             var info = obj as MProfileMetadata;
 
             if (info != null)
-                return info.Name.Equals(this.Name);
-            else if (obj is string)
-                return info.Name.Equals(obj.ToString());
-            else
-                return base.Equals(obj);
+                return info.Name.Equals(Name);
+            return obj is string ? info.Name.Equals(obj.ToString()) : base.Equals(obj);
         }
 
         public override string ToString()
         {
-            return this.Type + " " + this.Name;
+            return Type + " " + Name;
         }
 
         public override int GetHashCode()
         {
-            return this.Name.GetHashCode();
+            return Name.GetHashCode();
         }
     }
 }

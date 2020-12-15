@@ -35,45 +35,43 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
         {
             var javapath = Path.Combine(RuntimeDirectory, "bin", binaryName);
 
-            if (!File.Exists(javapath))
+            if (File.Exists(javapath)) return javapath;
+            string json = "";
+
+            var javaUrl = "";
+            using (var wc = new WebClient())
             {
-                string json = "";
+                json = wc.DownloadString(MojangServer.LauncherMeta);
 
-                var javaUrl = "";
-                using (var wc = new WebClient())
-                {
-                    json = wc.DownloadString(MojangServer.LauncherMeta);
+                var job = JObject.Parse(json)[MRule.OSName];
+                javaUrl = job[MRule.Arch]?["jre"]?["url"]?.ToString();
 
-                    var job = JObject.Parse(json)[MRule.OSName];
-                    javaUrl = job[MRule.Arch]?["jre"]?["url"]?.ToString();
+                if (string.IsNullOrEmpty(javaUrl))
+                    throw new PlatformNotSupportedException("Downloading JRE on current OS is not supported. Set JavaPath manually.");
 
-                    if (string.IsNullOrEmpty(javaUrl))
-                        throw new PlatformNotSupportedException("Downloading JRE on current OS is not supported. Set JavaPath manually.");
-
-                    Directory.CreateDirectory(RuntimeDirectory);
-                }
-
-                var lzmapath = Path.Combine(Path.GetTempPath(), "jre.lzma");
-                var zippath = Path.Combine(Path.GetTempPath(), "jre.zip");
-
-                var webdownloader = new WebDownload();
-                webdownloader.DownloadProgressChangedEvent += Downloader_DownloadProgressChangedEvent;
-                webdownloader.DownloadFile(javaUrl, lzmapath);
-
-                DownloadCompleted?.Invoke(this, new EventArgs());
-
-                SevenZipWrapper.DecompressFileLZMA(lzmapath, zippath);
-
-                var z = new SharpZip(zippath);
-                z.ProgressEvent += Z_ProgressEvent;
-                z.Unzip(RuntimeDirectory);
-
-                if (!File.Exists(javapath))
-                    throw new Exception("Failed Download");
-
-                if (MRule.OSName != "windows")
-                    IOUtil.Chmod(javapath, IOUtil.Chmod755);
+                Directory.CreateDirectory(RuntimeDirectory);
             }
+
+            var lzmapath = Path.Combine(Path.GetTempPath(), "jre.lzma");
+            var zippath = Path.Combine(Path.GetTempPath(), "jre.zip");
+
+            var webdownloader = new WebDownload();
+            webdownloader.DownloadProgressChangedEvent += Downloader_DownloadProgressChangedEvent;
+            webdownloader.DownloadFile(javaUrl, lzmapath);
+
+            DownloadCompleted?.Invoke(this, new EventArgs());
+
+            SevenZipWrapper.DecompressFileLZMA(lzmapath, zippath);
+
+            var z = new SharpZip(zippath);
+            z.ProgressEvent += Z_ProgressEvent;
+            z.Unzip(RuntimeDirectory);
+
+            if (!File.Exists(javapath))
+                throw new Exception("Failed Download");
+
+            if (MRule.OSName != "windows")
+                IOUtil.Chmod(javapath, IOUtil.Chmod755);
 
             return javapath;
         }
