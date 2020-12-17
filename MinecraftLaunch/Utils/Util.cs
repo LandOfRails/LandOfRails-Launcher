@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace LandOfRailsLauncher.MinecraftLaunch.Utils
@@ -62,8 +63,8 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Utils
         const int S_IXOTH = 0x1;
 
         public const int Chmod755 = S_IRUSR | S_IXUSR | S_IWUSR
-                            | S_IRGRP | S_IXGRP
-                            | S_IROTH | S_IXOTH;
+                                    | S_IRGRP | S_IXGRP
+                                    | S_IROTH | S_IXOTH;
 
         public static void Chmod(string path, int mode)
         {

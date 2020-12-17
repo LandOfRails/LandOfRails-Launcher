@@ -4,8 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using log4net;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace LandOfRailsLauncher.Helper
 {
@@ -19,12 +19,6 @@ namespace LandOfRailsLauncher.Helper
         private static bool NeedsUpdate = false;
         private static readonly string NewExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath) ?? string.Empty, "LandOfRails-Launcher.exe");
         private static readonly string OldExe = Path.Combine(Path.GetDirectoryName(Utils.ExePath), "LandOfRails-Launcher.old.exe");
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        public Updater()
-        {
-            log4net.Config.XmlConfigurator.Configure();
-        }
 
         public static async Task<bool> CheckForUpdate()
         {
@@ -39,7 +33,7 @@ namespace LandOfRailsLauncher.Helper
             }
             catch (Exception e)
             {
-                log.Error("CheckForUpdate", e);
+                Log.Error("CheckForUpdate", e);
             }
             return (LatestVersion > CurrentVersion);
         }
@@ -56,7 +50,7 @@ namespace LandOfRailsLauncher.Helper
                 //Utils.SendNotify((string)Application.Current.FindResource("Updater:CheckFailed"));
                 Console.WriteLine("Update Check failed.");
                 Console.WriteLine(e);
-                log.Error("CheckForUpdate", e);
+                Log.Error("CheckForUpdate", e);
             }
 
             if (NeedsUpdate) await StartUpdate();
@@ -70,7 +64,7 @@ namespace LandOfRailsLauncher.Helper
                 {
                     Console.WriteLine("Old file delete failed.");
                     Console.WriteLine(e);
-                    log.Error("Delete old exe", e);
+                    Log.Error("Delete old exe", e);
                 }
             }
         }
@@ -109,7 +103,7 @@ namespace LandOfRailsLauncher.Helper
             }
             catch (Exception e)
             {
-                log.Error("StartUpdate", e);
+                Log.Error("StartUpdate", e);
             }
         }
 
@@ -122,7 +116,7 @@ namespace LandOfRailsLauncher.Helper
             }
             catch (Exception e)
             {
-                log.Error("RunNew", e);
+                Log.Error("RunNew", e);
             }
         }
     }

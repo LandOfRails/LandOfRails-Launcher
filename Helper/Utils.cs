@@ -5,11 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using log4net;
+using System.Windows.Forms;
+using Microsoft.VisualBasic.Logging;
+using Application = System.Windows.Application;
+using Log = Serilog.Log;
+using MessageBox = System.Windows.MessageBox;
 
 namespace LandOfRailsLauncher.Helper
 {
@@ -17,18 +21,12 @@ namespace LandOfRailsLauncher.Helper
     {
         public static bool IsAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
         public static string ExePath = Process.GetCurrentProcess().MainModule.FileName;
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        public Utils()
-        {
-            log4net.Config.XmlConfigurator.Configure();
-        }
 
         public static void SendNotify(string message, string title = null)
         {
             string defaultTitle = (string)Application.Current.FindResource("Utils:NotificationTitle");
 
-            var notification = new System.Windows.Forms.NotifyIcon()
+            var notification = new NotifyIcon()
             {
                 Visible = true,
                 BalloonTipTitle = title ?? defaultTitle,
@@ -60,7 +58,7 @@ namespace LandOfRailsLauncher.Helper
                 catch (Exception e)
                 {
                     MessageBox.Show((string)Application.Current.FindResource("Utils:RunAsAdmin"));
-                    log.Error("StartAsAdmin", e);
+                    Log.Error("StartAsAdmin", e);
                 }
 
                 if (Close) Application.Current.Shutdown();
@@ -79,8 +77,36 @@ namespace LandOfRailsLauncher.Helper
             }
             catch (Exception e)
             {
-                log.Error("Download", e);
+                Log.Error("Download", e);
             }
+        }
+
+        public static int CompareVersions(string version1, string version2)
+        {
+            var string1Vals = version1.Split('.');
+            var string2Vals = version2.Split('.');
+
+            int length = Math.Max(string1Vals.Length, string2Vals.Length);
+
+            for (int i = 0; i < length; i++)
+            {
+                int v1 = (i < string1Vals.Length) ? int.Parse(string1Vals[i]) : 0;
+                int v2 = (i < string2Vals.Length) ? int.Parse(string2Vals[i]) : 0;
+
+                //Making sure Version1 bigger than version2
+                if (v1 > v2)
+                {
+                    return 1;
+                }
+                //Making sure Version1 smaller than version2
+                if (v1 < v2)
+                {
+                    return -1;
+                }
+            }
+
+            //Both are equal
+            return 0;
         }
     }
 }

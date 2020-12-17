@@ -4,7 +4,7 @@ using System.Windows;
 using LandOfRailsLauncher.Helper;
 using LandOfRailsLauncher.Properties;
 using LandOfRailsLauncher.Window;
-using log4net;
+using Serilog;
 
 namespace LandOfRailsLauncher
 {
@@ -17,10 +17,8 @@ namespace LandOfRailsLauncher
         private readonly string path = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "LandOfRails Launcher");
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public LoginWindow()
         {
-            log4net.Config.XmlConfigurator.Configure();
             InitializeComponent();
             if (Static.login.autoLogin()) ShowMainWindow();
             else if (!Settings.Default.EMail.Equals("null") && !Settings.Default.Password.Equals("null"))
@@ -28,19 +26,19 @@ namespace LandOfRailsLauncher
                 if (Static.login.login(Settings.Default.EMail, Settings.Default.Password))
                 {
                     ShowMainWindow();
-                    log.Info("Logged in.");
+                    Log.Information("Logged in.");
                 }
                 else
                 {
                     Wrong.Opacity = 1;
-                    log.Info("Wrong credentials,.");
+                    Log.Information("Wrong credentials,.");
                 }
             }
         }
 
         public void ShowMainWindow()
         {
-            log.Info("Show main window");
+            Log.Information("Show main window");
             var win = new MainWindow();
             Close();
             win.Show();
@@ -69,7 +67,7 @@ namespace LandOfRailsLauncher
                     //    sw.Close();
                     //}
 
-                    log.Info("Save credentials");
+                    Log.Information("Save credentials");
                     Settings.Default.Upgrade();
                     Settings.Default.EMail = EMailBox.Text;
                     Settings.Default.Password = PasswordBox.Password;
@@ -85,7 +83,7 @@ namespace LandOfRailsLauncher
             //MessageBoxResult result = MessageBox.Show("Dies wird die verwendete E-Mail Adresse sowie das Passwort lokal (aktuell noch in Klartext, ohne Verschlüsselung) auf deinem Computer speichern. Dies kann ein Sicherheitsrisiko für deinen Account darstellen. Mehr Informationen findest du auf WEBSEITE. \n\nMöchtest du dies wirklich lokal abspeichern? (Jederzeit in den Einstellungen änderbar.)"/*WEBSEITE DAZU ERSTELLEN*/, "Security alert", MessageBoxButton.YesNo);
             //if (result == MessageBoxResult.Yes)
             //{
-            log.Info("Remember true");
+            Log.Information("Remember true");
                 remember = true;
             //}
             //else RembemberLoginCheckBox.IsChecked = false;
@@ -93,7 +91,7 @@ namespace LandOfRailsLauncher
 
         private void RembemberLoginCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            log.Info("Remember false");
+            Log.Information("Remember false");
             remember = false;
         }
     }

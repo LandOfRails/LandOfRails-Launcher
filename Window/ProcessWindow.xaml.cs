@@ -18,30 +18,15 @@ namespace LandOfRailsLauncher.Window
         {
             InitializeComponent();
         }
-
         public void Start(Process process)
         {
             minecraftProcess = process;
-
-            minecraftProcess.OutputDataReceived += OutputHandler;
-            minecraftProcess.ErrorDataReceived += OutputHandler;
-
+            minecraftProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+            minecraftProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
             minecraftProcess.Start();
             minecraftProcess.BeginOutputReadLine();
             minecraftProcess.WaitForExit();
-
-            Timer timer = new Timer(2000);
-            timer.Elapsed += TimerOnElapsed;
-            timer.AutoReset = true;
-            timer.Enabled = true;
         }
-
-        private void TimerOnElapsed(object sender, ElapsedEventArgs e)
-        {
-            consoleText.Text = text;
-            ScrollViewer.ScrollToBottom();
-        }
-
         private void KillButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (minecraftProcess == null)
@@ -49,17 +34,15 @@ namespace LandOfRailsLauncher.Window
                 Close();
                 return;
             }
-            if(!minecraftProcess.HasExited)
+            if (!minecraftProcess.HasExited)
                 minecraftProcess.Kill();
         }
-
-        private String text;
-
         private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
-                text += "\n" + outLine.Data;
+                consoleText.Text += "\n" + outLine.Data;
+                ScrollViewer.ScrollToBottom();
             }));
         }
     }

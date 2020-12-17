@@ -11,8 +11,8 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using LandOfRailsLauncher.Helper;
 using LandOfRailsLauncher.Models;
-using log4net;
 using Newtonsoft.Json;
+using Serilog;
 using Path = System.IO.Path;
 
 namespace LandOfRailsLauncher.Window
@@ -29,11 +29,8 @@ namespace LandOfRailsLauncher.Window
 
         private int lastSelected = 999;
 
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         public MainWindow()
         {
-            log4net.Config.XmlConfigurator.Configure();
             path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "LandOfRails Launcher");
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
@@ -50,8 +47,8 @@ namespace LandOfRailsLauncher.Window
             ModpackImage.Source = images[Static.Modpacks[0]];
 
             Title = "LandOfRails Launcher v" + Assembly.GetExecutingAssembly().GetName().Version;
-
-            log.Info("Init main window completed.");
+            
+            Log.Information("Init main window completed.");
 
             //discord = new Helper.DiscordRPC();
             //discord.SetIdle();
@@ -103,15 +100,15 @@ namespace LandOfRailsLauncher.Window
                     if (Static.login.isDownloaded(modpack))
                     {
                         modpack.CurrentVersion = Static.login.getCurrentVersion(modpack);
-                        if (!Static.login.updateAvailable(modpack))
+                        if (!Static.login.UpdateAvailable(modpack))
                         {
-                            modpack.ModpackVersion = String.Empty;
+                            modpack.ModpackVersion = string.Empty;
                         }
                     }
                     else
                     {
                         modpack.CurrentVersion = modpack.ModpackVersion;
-                        modpack.ModpackVersion = String.Empty;
+                        modpack.ModpackVersion = string.Empty;
                     }
                 }
 
@@ -124,7 +121,7 @@ namespace LandOfRailsLauncher.Window
             }
             catch (Exception e)
             {
-                log.Error("RefreshListAsync", e);
+                Log.Error("RefreshListAsync", e);
             }
         }
 
@@ -143,7 +140,7 @@ namespace LandOfRailsLauncher.Window
             }
             catch (Exception exception)
             {
-                log.Error("Error selecting Modpack", exception);
+                Log.Error("Error selecting Modpack", exception);
             }
         }
         private void OpenFolder_OnClick(object sender, RoutedEventArgs e)
@@ -217,9 +214,7 @@ namespace LandOfRailsLauncher.Window
 
         private void OptionsButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var options = new OptionsWindow();
-            options.Owner = this;
-            options.ShowInTaskbar = false;
+            var options = new OptionsWindow {Owner = this, ShowInTaskbar = false};
             options.Show();
 #pragma warning disable 4014
             RefreshListAsync();

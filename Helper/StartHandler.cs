@@ -11,8 +11,8 @@ using LandOfRailsLauncher.MinecraftLaunch.Core;
 using LandOfRailsLauncher.Models;
 using LandOfRailsLauncher.Properties;
 using LandOfRailsLauncher.Window;
-using log4net;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace LandOfRailsLauncher.Helper
 {
@@ -48,11 +48,8 @@ namespace LandOfRailsLauncher.Helper
         private MSession session;
         private MProfile profile;
 
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         public StartHandler()
         {
-            log4net.Config.XmlConfigurator.Configure();
             startButtonEnabled = true;
 
             progressMaxValue = 100;
@@ -116,12 +113,7 @@ namespace LandOfRailsLauncher.Helper
             }
 
             var process = launcher.CreateProcess(modpack.MinecraftVersion, forgeVersion, option);
-            if (Settings.Default.openConsole)
-            {
-                processWindow = new ProcessWindow();
-                processWindow.Show();
-                processWindow.Start(process);
-            }
+            if (Settings.Default.openConsole) processWindow.Start(process);
             else process.Start();
         }
 
@@ -296,7 +288,7 @@ namespace LandOfRailsLauncher.Helper
                 update = false;
                 downloadModpack();
             }
-            else if (updateAvailable(modpack)) //Ist ein Update da?
+            else if (UpdateAvailable(modpack)) //Ist ein Update da?
                 switch (MessageBox.Show("Es ist ein Update verfügbar. Möchtest du es herunterladen?", "Update",
                     MessageBoxButton.YesNo, MessageBoxImage.Question))
                 {
@@ -312,6 +304,12 @@ namespace LandOfRailsLauncher.Helper
                 }
             else
             {
+                if (Settings.Default.openConsole)
+                {
+                    processWindow = new ProcessWindow();
+                    processWindow.Show();
+                }
+
                 StartSession();
             }
 
@@ -333,20 +331,20 @@ namespace LandOfRailsLauncher.Helper
             progressLabel = "[" + e.ProgressedFileCount + "/" + e.TotalFileCount + "] " + e.FileName;
         }
 
-        public bool updateAvailable(Modpack modpack)
+        public bool UpdateAvailable(Modpack modpack)
         {
+            if (modpack.ModpackVersion == string.Empty) return false;
             try
             {
+                //return Utils.CompareVersions(modpack.ModpackVersion, getCurrentVersion(modpack)) > 0;
                 Version currentVersion = new Version(getCurrentVersion(modpack));
                 Version modpackVersion = new Version(modpack.ModpackVersion);
-                //return modpackVersion > currentVersion;
-                var result = modpackVersion.CompareTo(currentVersion);
-                return result > 0;
+                return modpackVersion > currentVersion;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e + "\n" + getCurrentVersion(modpack));
-                log.Error("updateAvailable Version: " + getCurrentVersion(modpack)+"-", e);
+                Log.Error("updateAvailable Version: " + getCurrentVersion(modpack), e);
             }
 
             return false;
