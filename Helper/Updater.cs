@@ -11,7 +11,7 @@ namespace LandOfRailsLauncher.Helper
 {
     class Updater
     {
-        private static readonly string APILatestURL = "https://api.github.com/repos/MarkenJaden/LandOfRails-Launcher/releases/latest";
+        private static readonly string APILatestURL = "https://api.github.com/repos/LandOfRails/LandOfRails-Launcher/releases/latest";
 
         private static Update LatestUpdate;
         private static Version CurrentVersion;
