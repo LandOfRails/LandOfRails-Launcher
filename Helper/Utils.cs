@@ -58,7 +58,7 @@ namespace LandOfRailsLauncher.Helper
                 catch (Exception e)
                 {
                     MessageBox.Show((string)Application.Current.FindResource("Utils:RunAsAdmin"));
-                    Log.Error("StartAsAdmin", e);
+                    Log.Error(e, "StartAsAdmin");
                 }
 
                 if (Close) Application.Current.Shutdown();
@@ -77,7 +77,7 @@ namespace LandOfRailsLauncher.Helper
             }
             catch (Exception e)
             {
-                Log.Error("Download", e);
+                Log.Error(e, "Download");
             }
         }
 

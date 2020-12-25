@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using LandOfRailsLauncher.MinecraftLaunch.Utils;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
 namespace LandOfRailsLauncher.MinecraftLaunch.Core
 {
@@ -45,15 +46,20 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 
                 var job = JObject.Parse(json)[MRule.OSName];
                 javaUrl = job[MRule.Arch]?["jre"]?["url"]?.ToString();
-
+                Log.Information("Downloading java from: "+javaUrl);
                 if (string.IsNullOrEmpty(javaUrl))
+                {
+                    Log.Error("Downloading JRE on current OS is not supported. Set JavaPath manually.");
                     throw new PlatformNotSupportedException("Downloading JRE on current OS is not supported. Set JavaPath manually.");
+                }
 
                 Directory.CreateDirectory(RuntimeDirectory);
             }
 
             var lzmapath = Path.Combine(Path.GetTempPath(), "jre.lzma");
             var zippath = Path.Combine(Path.GetTempPath(), "jre.zip");
+
+            Log.Information($"Downloading to: {lzmapath} / {zippath}");
 
             var webdownloader = new WebDownload();
             webdownloader.DownloadProgressChangedEvent += Downloader_DownloadProgressChangedEvent;
@@ -68,26 +74,38 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             z.Unzip(RuntimeDirectory);
 
             if (!File.Exists(javapath))
+            {
+                Log.Error("Failed Download Java File exists: " + javapath);
                 throw new Exception("Failed Download");
+            }
 
             if (MRule.OSName != "windows")
                 IOUtil.Chmod(javapath, IOUtil.Chmod755);
 
+            Log.Information("Java path: " + javapath);
+
             return javapath;
         }
 
+        private int downloadProgress, unzipProgress;
+
         private void Z_ProgressEvent(object sender, int e)
         {
-            ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(e, null));
-        }
+            if (e != unzipProgress)
+            {
+                Log.Information("Unzip progress: " + e);
+            }
 
-        private void Szip_ProgressChange(object sender, ProgressChangedEventArgs e)
-        {
-            ProgressChanged?.Invoke(this, e);
+            ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(e, null));
         }
 
         private void Downloader_DownloadProgressChangedEvent(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
+            if (e.ProgressPercentage != downloadProgress)
+            {
+                Log.Information("Download progress: " + e.ProgressPercentage + "%");
+            }
+
             ProgressChanged?.Invoke(this, e);
         }
     }

@@ -113,6 +113,7 @@ namespace LandOfRailsLauncher.Helper
             }
 
             var process = launcher.CreateProcess(modpack.MinecraftVersion, forgeVersion, option);
+            Log.Debug($"{process.StartInfo.WorkingDirectory}\n{process.StartInfo.Arguments}\n{process.StartInfo.Domain}\n{process.StartInfo.FileName}\n{process.StartInfo.UserName}\n{process.StartInfo.Verb}");
             if (Settings.Default.openConsole) processWindow.Start(process);
             else process.Start();
         }
@@ -344,7 +345,7 @@ namespace LandOfRailsLauncher.Helper
             catch (Exception e)
             {
                 Console.WriteLine(e + "\n" + getCurrentVersion(modpack));
-                Log.Error("updateAvailable Version: " + getCurrentVersion(modpack), e);
+                Log.Error(e,"updateAvailable Version: " + getCurrentVersion(modpack));
             }
 
             return false;

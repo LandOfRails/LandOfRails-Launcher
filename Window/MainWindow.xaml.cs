@@ -121,7 +121,7 @@ namespace LandOfRailsLauncher.Window
             }
             catch (Exception e)
             {
-                Log.Error("RefreshListAsync", e);
+                Log.Error(e, "RefreshListAsync");
             }
         }
 
@@ -140,7 +140,7 @@ namespace LandOfRailsLauncher.Window
             }
             catch (Exception exception)
             {
-                Log.Error("Error selecting Modpack", exception);
+                Log.Error(exception, "Error selecting Modpack");
             }
         }
         private void OpenFolder_OnClick(object sender, RoutedEventArgs e)

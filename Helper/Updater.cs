@@ -33,7 +33,7 @@ namespace LandOfRailsLauncher.Helper
             }
             catch (Exception e)
             {
-                Log.Error("CheckForUpdate", e);
+                Log.Error(e, "CheckForUpdate");
             }
             return (LatestVersion > CurrentVersion);
         }
@@ -50,7 +50,7 @@ namespace LandOfRailsLauncher.Helper
                 //Utils.SendNotify((string)Application.Current.FindResource("Updater:CheckFailed"));
                 Console.WriteLine("Update Check failed.");
                 Console.WriteLine(e);
-                Log.Error("CheckForUpdate", e);
+                Log.Error(e,"CheckForUpdate");
             }
 
             if (NeedsUpdate) await StartUpdate();
@@ -64,7 +64,7 @@ namespace LandOfRailsLauncher.Helper
                 {
                     Console.WriteLine("Old file delete failed.");
                     Console.WriteLine(e);
-                    Log.Error("Delete old exe", e);
+                    Log.Error(e,"Delete old exe");
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace LandOfRailsLauncher.Helper
             }
             catch (Exception e)
             {
-                Log.Error("StartUpdate", e);
+                Log.Error(e,"StartUpdate");
             }
         }
 
@@ -116,7 +116,7 @@ namespace LandOfRailsLauncher.Helper
             }
             catch (Exception e)
             {
-                Log.Error("RunNew", e);
+                Log.Error(e, "RunNew");
             }
         }
     }

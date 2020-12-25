@@ -1,10 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading;
-using System.Timers;
 using System.Windows;
 using System.Windows.Threading;
-using Timer = System.Timers.Timer;
 
 namespace LandOfRailsLauncher.Window
 {
@@ -26,6 +23,7 @@ namespace LandOfRailsLauncher.Window
             minecraftProcess.Start();
             minecraftProcess.BeginOutputReadLine();
             minecraftProcess.WaitForExit();
+            consoleText.Text += "\n" + minecraftProcess;
         }
         private void KillButton_OnClick(object sender, RoutedEventArgs e)
         {
