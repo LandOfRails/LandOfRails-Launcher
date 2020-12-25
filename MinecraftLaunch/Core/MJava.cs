@@ -70,14 +70,8 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             Log.Information("Download completed. Start LZMAing...");
             try
             {
-                LZMA.DecompressFile(lzmapath, zippath, (l, l1) =>
-            {
-                Console.WriteLine(l);
-                Console.WriteLine(l1);
-                Console.WriteLine();
-            });
+                LZMA.DecompressFile(lzmapath, zippath);
                 //SevenZipWrapper.DecompressFileLZMA(lzmapath, zippath);
-
             }
             catch (Exception e)
             {

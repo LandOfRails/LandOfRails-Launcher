@@ -10,7 +10,7 @@
         <Rectangle Fill="#FF444444" Height="40" Stroke="Black" VerticalAlignment="Top"/>
         <Button Content="Kill" Name="KillButton" Click="KillButton_OnClick" Margin="0,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
         <ScrollViewer Name="ScrollViewer" Margin="0,40,0,10">
-            <TextBlock TextWrapping="Wrap" Text="Prozess startet..." Name="consoleText"/>
+            <TextBlock TextWrapping="Wrap" Text="Die benötigten Assets werden heruntergeladen... Bitte wirf einen Blick zu dem Fortschrittsbalken im Launcher, sollte dort für mehr als 5 Mintuten nicht mehr passieren, starte den Launcher bitte neu. (Dieses Problem wird in den nächsten Updates gelöst.)" Name="consoleText"/>
         </ScrollViewer>
 
     </Grid>
