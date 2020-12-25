@@ -59,7 +59,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
             var lzmapath = Path.Combine(Path.GetTempPath(), "jre.lzma");
             var zippath = Path.Combine(Path.GetTempPath(), "jre.zip");
 
-            Log.Information($"Downloading to: {lzmapath} / {zippath}");
+            Log.Information($"Downloading to: {lzmapath}");
 
             var webdownloader = new WebDownload();
             webdownloader.DownloadProgressChangedEvent += Downloader_DownloadProgressChangedEvent;
@@ -67,7 +67,24 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
 
             DownloadCompleted?.Invoke(this, new EventArgs());
 
-            SevenZipWrapper.DecompressFileLZMA(lzmapath, zippath);
+            Log.Information("Download completed. Start LZMAing...");
+            try
+            {
+                LZMA.DecompressFile(lzmapath, zippath, (l, l1) =>
+            {
+                Console.WriteLine(l);
+                Console.WriteLine(l1);
+                Console.WriteLine();
+            });
+                //SevenZipWrapper.DecompressFileLZMA(lzmapath, zippath);
+
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "LZMA Error");
+            }
+
+            Log.Information("Start Unzipping...");
 
             var z = new SharpZip(zippath);
             z.ProgressEvent += Z_ProgressEvent;
@@ -93,6 +110,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
         {
             if (e != unzipProgress)
             {
+                unzipProgress = e;
                 Log.Information("Unzip progress: " + e);
             }
 
@@ -103,6 +121,7 @@ namespace LandOfRailsLauncher.MinecraftLaunch.Core
         {
             if (e.ProgressPercentage != downloadProgress)
             {
+                downloadProgress = e.ProgressPercentage;
                 Log.Information("Download progress: " + e.ProgressPercentage + "%");
             }
 
