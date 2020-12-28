@@ -182,7 +182,6 @@
     <Compile Include="MinecraftLaunch\Core\MProfileType.cs" />
     <Compile Include="MinecraftLaunch\Core\MRule.cs" />
     <Compile Include="MinecraftLaunch\Core\WebDownload.cs" />
-    <Compile Include="MinecraftLaunch\Utils\LZMA.cs" />
     <Compile Include="MinecraftLaunch\Utils\SevenZipWrapper.cs" />
     <Compile Include="MinecraftLaunch\Utils\SharpZip.cs" />
     <Compile Include="MinecraftLaunch\Utils\Util.cs" />

@@ -24,8 +24,8 @@ namespace LandOfRailsLauncher.Window
     {
         private string path;
         private Modpack currentSelectedModpack;
-        private Dictionary<Modpack, BitmapImage> images = new Dictionary<Modpack, BitmapImage>();
-        Helper.DiscordRPC discord;
+        private Dictionary<Modpack, BitmapImage> images = new();
+        //Helper.DiscordRPC discord;
 
         private int lastSelected = 999;
 
