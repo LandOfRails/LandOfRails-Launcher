@@ -4,10 +4,11 @@ namespace LandOfRailsLauncher.Models
 {
     class Modpack
     {
-        public Modpack(string name, string title, string modpackVersion, string minecraftVersion, int organisation, string key, string locationOnServer, string imageUrl, string downloadedImage)
+        public Modpack(string name, string title, string shortcut, string modpackVersion, string minecraftVersion, int organisation, string key, string locationOnServer, string imageUrl, string downloadedImage)
         {
             Name = name;
             Title = title;
+            Shortcut = shortcut;
             MinecraftVersion = minecraftVersion;
             ModpackVersion = modpackVersion;
             Organisation = organisation;
@@ -19,6 +20,7 @@ namespace LandOfRailsLauncher.Models
         }
         public string Name { get; set; }
         public string Title { get; set; }
+        public string Shortcut { get; set; }
         public string MinecraftVersion { get; set; }
         public string ModpackVersion { get; set; }
 
